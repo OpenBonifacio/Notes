@@ -2,6 +2,7 @@ package fr.bonifaciosoftwares.notes
 
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import fr.bonifaciosoftwares.notes.app.App
 
 fun main() = application {
     Window(
