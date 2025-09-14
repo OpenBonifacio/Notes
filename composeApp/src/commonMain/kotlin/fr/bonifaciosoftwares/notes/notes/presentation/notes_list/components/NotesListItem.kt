@@ -7,23 +7,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import fr.bonifaciosoftwares.notes.core.presentation.DarkBlue
-import fr.bonifaciosoftwares.notes.core.presentation.LightBlue
-import fr.bonifaciosoftwares.notes.core.presentation.SandYellow
-import fr.bonifaciosoftwares.notes.core.presentation.SandYellowLight
 import fr.bonifaciosoftwares.notes.notes.domain.Note
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -53,7 +46,7 @@ fun NotesListItem(
         ) {
             Column(
                 modifier = Modifier.padding(
-                    30.dp
+                    25.dp
                 )
             ) {
                 Text(
@@ -62,7 +55,8 @@ fun NotesListItem(
                         sharedTransitionScope.rememberSharedContentState(key = "title-${note.id}"),
                         animatedVisibilityScope = animatedContentScope
                     ),
-                    fontWeight = FontWeight.SemiBold
+                    //fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.titleMedium
                 )
                 Text(
                     text = note.content,

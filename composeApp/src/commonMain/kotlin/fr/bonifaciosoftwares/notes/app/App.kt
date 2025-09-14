@@ -2,7 +2,6 @@ package fr.bonifaciosoftwares.notes.app
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -15,10 +14,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -56,7 +55,9 @@ fun App() {
 
         val currentRouteIsNotesList = currentDestination?.hasRoute(Route.NotesList::class) == true
 
-        val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+        val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+            state = rememberTopAppBarState(),
+        )
 
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -85,7 +86,7 @@ fun App() {
                 if (currentRouteIsNotesList){
                     FloatingActionButton(
                         onClick = {
-                            navController.navigateSingleTopTo(Route.NoteDetails())
+                            navController.navigateSingleTopTo(Route.NoteDetails(-1L))
                         },
                     ){
                         Icon(Icons.Default.Edit, null)
@@ -97,11 +98,6 @@ fun App() {
                 NavHost(
                     navController = navController,
                     startDestination = Route.NotesList,
-                    modifier = Modifier.padding(
-                        bottom = innerPadding.calculateBottomPadding(),
-                        start = 12.dp,
-                        end = 12.dp
-                    )
                 ){
                     composable<Route.NotesList>{
                         NotesListScreenRoot(
@@ -127,7 +123,8 @@ fun App() {
                             ),
                             onBackClick = { navController.popBackStack() },
                             this@SharedTransitionLayout,
-                            this@composable
+                            this@composable,
+                            scrollBehavior = scrollBehavior
                         )
                     }
                 }
