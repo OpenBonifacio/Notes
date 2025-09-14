@@ -14,7 +14,7 @@ class NoteDetailsViewModel(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(NoteDetailsState(
-        if (noteId == -1L){
+        if (noteId == -1L || noteId == null){
             Note(-1, "", "")
         }else{
             allNotes.find { it.id == noteId }

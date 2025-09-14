@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -26,6 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import fr.bonifaciosoftwares.notes.notes.presentation.note_details.NoteDetailsScreenRoot
 import fr.bonifaciosoftwares.notes.notes.presentation.note_details.NoteDetailsViewModel
 import fr.bonifaciosoftwares.notes.notes.presentation.notes_list.NotesListScreenRoot
@@ -55,12 +57,12 @@ fun App() {
 
         val currentRouteIsNotesList = currentDestination?.hasRoute(Route.NotesList::class) == true
 
-        val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+        /*val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
             state = rememberTopAppBarState(),
-        )
+        )*/
 
         Scaffold(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            //modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             bottomBar = {
                 if (currentRouteIsBottomBarRoute) {
                     NavigationBar(
@@ -84,7 +86,7 @@ fun App() {
             },
             floatingActionButton = {
                 if (currentRouteIsNotesList){
-                    FloatingActionButton(
+                    LargeFloatingActionButton(
                         onClick = {
                             navController.navigateSingleTopTo(Route.NoteDetails(-1L))
                         },
@@ -103,10 +105,10 @@ fun App() {
                         NotesListScreenRoot(
                             viewModel = NotesListViewModel(),
                             onNoteClick = { note ->
-                                navController.currentBackStackEntry?.savedStateHandle?.set("noteId", note.id)
+                                //navController.currentBackStackEntry?.savedStateHandle?.set("noteId", note.id)
                                 navController.navigateSingleTopTo(Route.NoteDetails(noteId = note.id))
                             },
-                            scrollBehavior = scrollBehavior,
+                            //scrollBehavior = scrollBehavior,
                             this@SharedTransitionLayout,
                             this@composable
                         )
@@ -116,15 +118,17 @@ fun App() {
                     }
 
                     composable<Route.NoteDetails>{ backStackEntry ->
-                        val noteId = navController.previousBackStackEntry?.savedStateHandle?.get<Long>("noteId")
+                        val routeArgs: Route.NoteDetails = backStackEntry.toRoute() // Extension de la lib navigation-compose
+                        val noteIdFromRoute = routeArgs.noteId
+
                         NoteDetailsScreenRoot(
                             viewModel = NoteDetailsViewModel(
-                                noteId = noteId
+                                noteId = noteIdFromRoute
                             ),
                             onBackClick = { navController.popBackStack() },
                             this@SharedTransitionLayout,
                             this@composable,
-                            scrollBehavior = scrollBehavior
+                            //scrollBehavior = scrollBehavior
                         )
                     }
                 }
@@ -140,7 +144,4 @@ fun <T: Route> NavHostController.navigateSingleTopTo(route: T) =
         ) {
             saveState = true
         }
-        launchSingleTop = true
-        restoreState = true
     }
-

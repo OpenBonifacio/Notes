@@ -26,9 +26,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.minimumInteractiveComponentSize
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,9 +46,13 @@ fun NoteDetailsScreenRoot(
     onBackClick: () -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope,
-    scrollBehavior: TopAppBarScrollBehavior
+    //scrollBehavior: TopAppBarScrollBehavior
 ){
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val topAppBarState = rememberTopAppBarState()
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState) // Ou le behavior désiré pour les détails
+
 
     NoteDetailsScreen(
         state = state,
@@ -82,6 +89,10 @@ fun NoteDetailsScreen(
 
     val columnScrollableState = rememberScrollState()
 
+    //Réinitialiser la page en haut
+    LaunchedEffect(Unit) {
+        columnScrollableState.scrollTo(0)
+    }
 
     Scaffold(
         modifier = Modifier
@@ -93,7 +104,8 @@ fun NoteDetailsScreen(
                     BasicTextField(
                         state = titleTextState,
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .nestedScroll(scrollBehavior.nestedScrollConnection),
                         textStyle = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onSurface),
                         lineLimits = TextFieldLineLimits.MultiLine(minHeightInLines = 1, maxHeightInLines = 2),
                         decorator = @Composable { innerTextField ->
