@@ -28,9 +28,8 @@ import fr.bonifaciosoftwares.notes.notes.presentation.notes_list.components.Note
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun NotesListScreenRoot(
-    viewModel: NotesListViewModel,
+    viewModel: NotesListViewModel, //= koinViewModel(),
     onNoteClick: (Note) -> Unit,
-    //scrollBehavior: TopAppBarScrollBehavior,
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope
 ){
@@ -92,7 +91,7 @@ fun NotesListScreen(
             },
             notes = state.notes,
             sharedTransitionScope = sharedTransitionScope,
-            animatedContentScope = animatedContentScope
+            animatedContentScope = animatedContentScope,
         )
     }
 }

@@ -2,17 +2,28 @@ package fr.bonifaciosoftwares.notes.notes.presentation.notes_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.bonifaciosoftwares.notes.notes.data.database.allNotes
+import fr.bonifaciosoftwares.notes.notes.data.database.toNote
+import fr.bonifaciosoftwares.notes.notes.domain.NoteRepository
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 
-class NotesListViewModel : ViewModel() {
+class NotesListViewModel(
+    val noteRepository: NoteRepository
+) : ViewModel() {
+
+    private var observeNotesJob: Job? = null
 
     private val _state = MutableStateFlow(NotesListState())
     val state = _state
         .onStart {
-
+            observeNotes()
         }
         .stateIn(
             viewModelScope,
@@ -23,6 +34,27 @@ class NotesListViewModel : ViewModel() {
     fun onAction(action: NotesListAction){
         when(action){
              is NotesListAction.OnNoteClick -> Unit
+        }
+    }
+
+    private fun observeNotes(){
+        /*observeNotesJob?.cancel()
+        observeNotesJob = noteRepository
+            .getNotes()
+            .onEach{ notes ->
+                _state.update {
+                    it.copy(
+                        notes = notes
+                    )
+                }
+            }.launchIn(viewModelScope)*/
+
+        _state.update {
+            it.copy(
+                notes = allNotes.map { note ->
+                    note.toNote()
+                }
+            )
         }
     }
 }

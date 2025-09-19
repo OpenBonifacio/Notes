@@ -15,7 +15,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
+import androidx.compose.foundation.text.input.setTextAndSelectAll
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -79,13 +82,22 @@ fun NoteDetailsScreen(
     scrollBehavior: TopAppBarScrollBehavior
 ) {
 
-    val titleTextState = rememberTextFieldState(
+    val titleTextState: TextFieldState = rememberTextFieldState(
         state.note?.title ?: ""
     )
 
     val contentTextState = rememberTextFieldState(
         state.note?.content ?: ""
     )
+
+    LaunchedEffect(state.note) {
+        state.note?.let { note ->
+            titleTextState.setTextAndPlaceCursorAtEnd(note.title)
+            contentTextState.setTextAndPlaceCursorAtEnd(note.content)
+
+        }
+    }
+
 
     val columnScrollableState = rememberScrollState()
 

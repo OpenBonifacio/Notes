@@ -33,16 +33,14 @@ import fr.bonifaciosoftwares.notes.notes.presentation.note_details.NoteDetailsVi
 import fr.bonifaciosoftwares.notes.notes.presentation.notes_list.NotesListScreenRoot
 import fr.bonifaciosoftwares.notes.notes.presentation.notes_list.NotesListViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 @Preview
 fun App() {
-    MaterialTheme(
-        colorScheme = MaterialTheme.colorScheme.copy(
-            //background = SandYellowLight
-        )
-    ) {
+    MaterialTheme{
 
         val navController = rememberNavController()
 
@@ -57,12 +55,7 @@ fun App() {
 
         val currentRouteIsNotesList = currentDestination?.hasRoute(Route.NotesList::class) == true
 
-        /*val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-            state = rememberTopAppBarState(),
-        )*/
-
         Scaffold(
-            //modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             bottomBar = {
                 if (currentRouteIsBottomBarRoute) {
                     NavigationBar(
@@ -102,13 +95,12 @@ fun App() {
                     startDestination = Route.NotesList,
                 ){
                     composable<Route.NotesList>{
+                        val viewModel = koinViewModel<NotesListViewModel>()
                         NotesListScreenRoot(
-                            viewModel = NotesListViewModel(),
+                            viewModel = viewModel,
                             onNoteClick = { note ->
-                                //navController.currentBackStackEntry?.savedStateHandle?.set("noteId", note.id)
                                 navController.navigateSingleTopTo(Route.NoteDetails(noteId = note.id))
                             },
-                            //scrollBehavior = scrollBehavior,
                             this@SharedTransitionLayout,
                             this@composable
                         )
@@ -122,13 +114,15 @@ fun App() {
                         val noteIdFromRoute = routeArgs.noteId
 
                         NoteDetailsScreenRoot(
-                            viewModel = NoteDetailsViewModel(
+                            /*viewModel = NoteDetailsViewModel(
                                 noteId = noteIdFromRoute
+                            ),*/
+                            viewModel = koinViewModel<NoteDetailsViewModel>(
+                                parameters = { parametersOf(noteIdFromRoute) }
                             ),
                             onBackClick = { navController.popBackStack() },
                             this@SharedTransitionLayout,
                             this@composable,
-                            //scrollBehavior = scrollBehavior
                         )
                     }
                 }
