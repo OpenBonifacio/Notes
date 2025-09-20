@@ -6,4 +6,6 @@ sealed interface NoteDetailsAction {
     data class OnSaveClick(val title:String="", val content:String ="") : NoteDetailsAction
 
     data object OnDeleteClick: NoteDetailsAction
+
+    data object OnFavoriteClick: NoteDetailsAction
 }

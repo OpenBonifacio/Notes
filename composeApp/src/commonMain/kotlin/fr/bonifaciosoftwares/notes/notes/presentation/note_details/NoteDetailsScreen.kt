@@ -4,7 +4,6 @@ package fr.bonifaciosoftwares.notes.notes.presentation.note_details
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,24 +13,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import fr.bonifaciosoftwares.notes.notes.presentation.note_details.components.NoteDetailsTopAppBar
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -97,7 +89,6 @@ fun NoteDetailsScreen(
         }
     }
 
-
     val columnScrollableState = rememberScrollState()
 
     //Réinitialiser la page en haut
@@ -117,69 +108,29 @@ fun NoteDetailsScreen(
                     animatedVisibilityScope = animatedContentScope
                 ),
             topBar = {
-                MediumTopAppBar(
-                    title = {
-                        BasicTextField(
-                            state = titleTextState,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .nestedScroll(scrollBehavior.nestedScrollConnection),
-                            textStyle = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onSurface),
-                            lineLimits = TextFieldLineLimits.MultiLine(minHeightInLines = 1, maxHeightInLines = 2),
-                            decorator = @Composable { innerTextField ->
-                                Box(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    contentAlignment = Alignment.CenterStart
-                                ) {
-                                    // PLACEHOLDER
-                                    if (titleTextState.text.isEmpty()) {
-                                        Text(
-                                            text = "Titre de la note...",
-                                            style = MaterialTheme.typography.titleLarge,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                                        )
-                                    }
-                                    innerTextField()
-                                }
-                            }
+                NoteDetailsTopAppBar(
+                    modifier = Modifier,
+                    titleTextState = titleTextState,
+                    scrollBehavior = scrollBehavior,
+                    onSaveClick = {
+                        onAction(
+                            NoteDetailsAction.OnSaveClick(
+                                title = titleTextState.text.toString(),
+                                content = contentTextState.text.toString()
+                            )
                         )
-
+                        onAction(NoteDetailsAction.OnBackClick)
                     },
-                    navigationIcon = {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            modifier = Modifier
-                                .clickable(onClick = { onAction(NoteDetailsAction.OnBackClick) })
-                                .minimumInteractiveComponentSize()
-                        )
+                    onDeleteClick = {
+                        onAction(NoteDetailsAction.OnDeleteClick)
+                        onAction(NoteDetailsAction.OnBackClick)
                     },
-                    actions = {
-                        Icon(
-                            imageVector = Icons.Outlined.Save,
-                            contentDescription = "Save",
-                            modifier = Modifier
-                                .minimumInteractiveComponentSize()
-                                .clickable(onClick = {
-                                    onAction(NoteDetailsAction.OnSaveClick(
-                                        title = titleTextState.text.toString(),
-                                        content = contentTextState.text.toString()
-                                    ))
-                                    onAction(NoteDetailsAction.OnBackClick)
-                                })
-                        )
-                        Icon(
-                            imageVector = Icons.Outlined.Delete,
-                            contentDescription = "Delete",
-                            modifier = Modifier
-                                .minimumInteractiveComponentSize()
-                                .clickable(onClick = {
-                                    onAction(NoteDetailsAction.OnDeleteClick)
-                                    onAction(NoteDetailsAction.OnBackClick)
-                                })
-                        )
+                    onBackClick = {
+                        onAction(NoteDetailsAction.OnBackClick)
                     },
-                    scrollBehavior = scrollBehavior
+                    onFavoriteClick = {
+                        onAction(NoteDetailsAction.OnFavoriteClick)
+                    }
                 )
             }
         ) { innerPadding ->

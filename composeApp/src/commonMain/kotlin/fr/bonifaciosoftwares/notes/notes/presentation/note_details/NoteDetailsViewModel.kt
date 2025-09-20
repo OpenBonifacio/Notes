@@ -2,8 +2,6 @@ package fr.bonifaciosoftwares.notes.notes.presentation.note_details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fr.bonifaciosoftwares.notes.notes.data.database.allNotes
-import fr.bonifaciosoftwares.notes.notes.data.mappers.toNote
 import fr.bonifaciosoftwares.notes.notes.domain.Note
 import fr.bonifaciosoftwares.notes.notes.domain.NoteRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -58,23 +56,14 @@ class NoteDetailsViewModel(
                     }
                 }
             }
+            is NoteDetailsAction.OnFavoriteClick -> {
+
+            }
         }
     }
 
     private fun fetchNoteDetails(){
         viewModelScope.launch {
-            /*noteRepository
-                .getNote(noteId)
-                .onSuccess { description ->
-                    _state.update {
-                        it.copy(
-                            book = it.book?.copy(
-                                description = description
-                            ),
-                            isLoading = false
-                        )
-                    }
-                }*/
             if (noteId == 0L){
                 _state.update {
                     it.copy(
