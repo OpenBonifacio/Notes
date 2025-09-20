@@ -7,7 +7,11 @@ import kotlinx.coroutines.flow.Flow
 interface NoteRepository {
     fun getNotes() : Flow<List<Note>>
 
-    //fun getNote(noteId: Long) : Flow<Note>
+    suspend fun getNote(noteId: Long) : Note?
 
     suspend fun upsertNote(note: Note) : EmptyResult<DataError.Local>
+
+    suspend fun deleteNote(note: Note) : EmptyResult<DataError.Local>
+
+    suspend fun updateNote(note: Note): EmptyResult<DataError.Local>
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fr.bonifaciosoftwares.notes.notes.data.database.allNotes
 import fr.bonifaciosoftwares.notes.notes.data.mappers.toNote
+import fr.bonifaciosoftwares.notes.notes.domain.Note
 import fr.bonifaciosoftwares.notes.notes.domain.NoteRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,7 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class NoteDetailsViewModel(
-    private val noteId: Long? = 0,
+    private val noteId: Long = 0,
     private val noteRepository: NoteRepository
 ) : ViewModel() {
 
@@ -32,11 +33,30 @@ class NoteDetailsViewModel(
         when(action){
             is NoteDetailsAction.OnBackClick -> Unit
             is NoteDetailsAction.OnSaveClick -> {
+                _state.update { current ->
+                    current.copy(
+                        note = current.note?.copy(
+                            title = action.title,
+                            content = action.content
+                        )
+                    )
+                }
                viewModelScope.launch {
                    state.value.note?.let {
-                       noteRepository.upsertNote(it)
+                       if (it.id == 0L){
+                             noteRepository.upsertNote(it)
+                       }else{
+                            noteRepository.updateNote(it)
+                       }
                    }
                }
+            }
+            is NoteDetailsAction.OnDeleteClick -> {
+                viewModelScope.launch {
+                    state.value.note?.let {
+                        noteRepository.deleteNote(it)
+                    }
+                }
             }
         }
     }
@@ -55,14 +75,24 @@ class NoteDetailsViewModel(
                         )
                     }
                 }*/
-
-            allNotes.find { it.id == noteId }?.let { note ->
+            if (noteId == 0L){
                 _state.update {
                     it.copy(
-                        note = note.toNote(),
+                        note = Note(id = noteId),
                         isLoading = false
                     )
                 }
+
+            }else{
+                noteRepository
+                    .getNote(noteId).let { note ->
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                note = note
+                            )
+                        }
+                    }
             }
         }
     }

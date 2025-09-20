@@ -25,6 +25,10 @@ class DefaultNoteRepository(
             }
     }
 
+    override suspend fun getNote(noteId: Long): Note? {
+        return notesDao.getNote(noteId)?.toNote()
+    }
+
     override suspend fun upsertNote(note: Note): EmptyResult<DataError.Local> {
         return try {
             notesDao.upsert(note.toNoteEntity())
@@ -33,4 +37,24 @@ class DefaultNoteRepository(
             Result.Error(DataError.Local.DISK_FULL)
         }
     }
+
+    override suspend fun deleteNote(note: Note): EmptyResult<DataError.Local> {
+        return try {
+            notesDao.deleteNote(note.id)
+            Result.Success(Unit)
+        } catch (e: SQLiteException){
+            Result.Error(DataError.Local.UNKNOWN)
+        }
+    }
+
+    override suspend fun updateNote(note: Note): EmptyResult<DataError.Local> {
+        return try {
+            notesDao.updateNote(note.id, note.title, note.content)
+            Result.Success(Unit)
+        }catch (e: SQLiteException){
+            Result.Error(DataError.Local.UNKNOWN)
+        }
+    }
+
+
 }

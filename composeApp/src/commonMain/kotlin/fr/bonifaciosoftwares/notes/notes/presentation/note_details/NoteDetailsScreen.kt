@@ -22,7 +22,9 @@ import androidx.compose.foundation.text.input.setTextAndSelectAll
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -49,7 +51,6 @@ fun NoteDetailsScreenRoot(
     onBackClick: () -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope,
-    //scrollBehavior: TopAppBarScrollBehavior
 ){
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -150,12 +151,26 @@ fun NoteDetailsScreen(
                 },
                 actions = {
                     Icon(
-                        imageVector = Icons.Outlined.Favorite,
-                        contentDescription = "Favorite",
+                        imageVector = Icons.Outlined.Save,
+                        contentDescription = "Save",
                         modifier = Modifier
                             .minimumInteractiveComponentSize()
                             .clickable(onClick = {
-                                onAction(NoteDetailsAction.OnSaveClick)
+                                onAction(NoteDetailsAction.OnSaveClick(
+                                    title = titleTextState.text.toString(),
+                                    content = contentTextState.text.toString()
+                                ))
+                                onAction(NoteDetailsAction.OnBackClick)
+                            })
+                    )
+                    Icon(
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = "Delete",
+                        modifier = Modifier
+                            .minimumInteractiveComponentSize()
+                            .clickable(onClick = {
+                                onAction(NoteDetailsAction.OnDeleteClick)
+                                onAction(NoteDetailsAction.OnBackClick)
                             })
                     )
                 },
