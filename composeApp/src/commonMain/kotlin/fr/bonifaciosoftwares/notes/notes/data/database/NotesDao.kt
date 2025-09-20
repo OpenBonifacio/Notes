@@ -1,22 +1,28 @@
 package fr.bonifaciosoftwares.notes.notes.data.database
 
-import fr.bonifaciosoftwares.notes.notes.domain.Note
+import androidx.room.Dao
+import androidx.room.Query
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 
+@Dao
 interface NotesDao {
 
-    fun getNotes() : Flow<List<NoteEntity>>{
-        return allNotes as Flow<List<NoteEntity>>
-    }
+    @Query("SELECT * FROM NoteEntity")
+    fun getNotes() : Flow<List<NoteEntity>>
 
-    /*fun getNote(noteId: Long) : Flow<NoteEntity>{
-        for (note in allNotes){
-            if (note.id == noteId){
-                return note as Flow<NoteEntity>
-            }
-        }
-    }*/
+    @Query("SELECT * FROM NoteEntity WHERE id = :id")
+    suspend fun getNote(id: Long) : NoteEntity?
+
+    @Query("DELETE FROM NoteEntity WHERE id = :id")
+    suspend fun deleteNote(id: Long)
+
+    @Query("UPDATE NoteEntity SET title = :title, content = :content WHERE id = :id")
+    suspend fun updateNote(id: Long, title: String, content: String)
+
+    @Upsert
+    suspend fun upsert(noteEntity: NoteEntity)
 }
 
 val allNotes = listOf(

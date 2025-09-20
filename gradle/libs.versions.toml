@@ -13,7 +13,7 @@ animation = "1.9.1"
 composeHotReload = "1.0.0-beta06"
 composeMultiplatform = "1.8.2"
 junit = "4.13.2"
-kotlin = "2.2.20"
+kotlin = "2.2.10"
 kotlinx-coroutines = "1.10.2"
 navigationComposeVersion = "2.9.4"
 
@@ -21,6 +21,10 @@ koin = "4.1.1"
 koinComposeMultiplatform = "4.1.1"
 navigationCompose = "2.9.0"
 lifecycleViewModel = "2.9.3"
+
+room = "2.8.0"
+ksp = "2.2.10-2.0.2"
+sqlite = "2.6.0"
 
 
 [libraries]
@@ -46,6 +50,11 @@ koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koinComp
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koinComposeMultiplatform" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-runtime-android = { module = "androidx.room:room-runtime-android", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -54,3 +63,5 @@ composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMul
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 
+ksp = {id = "com.google.devtools.ksp", version.ref = "ksp"}
+room = { id = "androidx.room", version.ref = "room"}

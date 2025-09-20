@@ -1,4 +1,7 @@
 package fr.bonifaciosoftwares.notes.notes.data.database
 
-/*expect class DatabaseFactory {
-}*/
+import androidx.room.RoomDatabase
+
+expect class DatabaseFactory {
+    fun create(): RoomDatabase.Builder<NotesDatabase>
+}

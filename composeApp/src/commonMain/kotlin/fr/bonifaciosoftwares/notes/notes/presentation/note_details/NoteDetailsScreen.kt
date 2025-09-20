@@ -154,7 +154,9 @@ fun NoteDetailsScreen(
                         contentDescription = "Favorite",
                         modifier = Modifier
                             .minimumInteractiveComponentSize()
-                            .clickable(onClick = {})
+                            .clickable(onClick = {
+                                onAction(NoteDetailsAction.OnSaveClick)
+                            })
                     )
                 },
                 scrollBehavior = scrollBehavior

@@ -81,7 +81,7 @@ fun App() {
                 if (currentRouteIsNotesList){
                     LargeFloatingActionButton(
                         onClick = {
-                            navController.navigateSingleTopTo(Route.NoteDetails(-1L))
+                            navController.navigateSingleTopTo(Route.NoteDetails(0L))
                         },
                     ){
                         Icon(Icons.Default.Edit, null)

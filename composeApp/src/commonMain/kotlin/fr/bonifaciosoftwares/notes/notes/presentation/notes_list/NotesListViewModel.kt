@@ -3,7 +3,7 @@ package fr.bonifaciosoftwares.notes.notes.presentation.notes_list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fr.bonifaciosoftwares.notes.notes.data.database.allNotes
-import fr.bonifaciosoftwares.notes.notes.data.database.toNote
+import fr.bonifaciosoftwares.notes.notes.data.mappers.toNote
 import fr.bonifaciosoftwares.notes.notes.domain.NoteRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +38,7 @@ class NotesListViewModel(
     }
 
     private fun observeNotes(){
-        /*observeNotesJob?.cancel()
+        observeNotesJob?.cancel()
         observeNotesJob = noteRepository
             .getNotes()
             .onEach{ notes ->
@@ -47,14 +47,6 @@ class NotesListViewModel(
                         notes = notes
                     )
                 }
-            }.launchIn(viewModelScope)*/
-
-        _state.update {
-            it.copy(
-                notes = allNotes.map { note ->
-                    note.toNote()
-                }
-            )
-        }
+            }.launchIn(viewModelScope)
     }
 }

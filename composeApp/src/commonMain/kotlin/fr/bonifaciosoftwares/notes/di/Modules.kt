@@ -1,6 +1,9 @@
 package fr.bonifaciosoftwares.notes.di
 
 //import fr.bonifaciosoftwares.notes.notes.data.database.DatabaseFactory
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import fr.bonifaciosoftwares.notes.notes.data.database.DatabaseFactory
+import fr.bonifaciosoftwares.notes.notes.data.database.NotesDatabase
 import fr.bonifaciosoftwares.notes.notes.data.repository.DefaultNoteRepository
 import fr.bonifaciosoftwares.notes.notes.domain.NoteRepository
 import fr.bonifaciosoftwares.notes.notes.presentation.note_details.NoteDetailsViewModel
@@ -26,12 +29,12 @@ val sharedModule = module {
     */
     singleOf(::DefaultNoteRepository).bind<NoteRepository>()
 
-    /*single {
+    single {
         get<DatabaseFactory>().create()
             .setDriver(BundledSQLiteDriver())
             .build()
     }
-    single { get<FavoriteBookDatabase>().favoriteBookDao }*/
+    single { get<NotesDatabase>().notesDao }
 
     viewModelOf(::NotesListViewModel)
     viewModel { (noteId: Long?) ->
