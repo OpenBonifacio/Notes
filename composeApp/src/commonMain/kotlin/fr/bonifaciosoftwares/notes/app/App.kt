@@ -2,23 +2,15 @@ package fr.bonifaciosoftwares.notes.app
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -53,8 +45,6 @@ fun App() {
             } == true
         }
 
-        val currentRouteIsNotesList = currentDestination?.hasRoute(Route.NotesList::class) == true
-
         Scaffold(
             bottomBar = {
                 if (currentRouteIsBottomBarRoute) {
@@ -77,17 +67,6 @@ fun App() {
                     }
                 }
             },
-            floatingActionButton = {
-                if (currentRouteIsNotesList){
-                    LargeFloatingActionButton(
-                        onClick = {
-                            navController.navigateSingleTopTo(Route.NoteDetails(0L))
-                        },
-                    ){
-                        Icon(Icons.Default.Edit, null)
-                    }
-                }
-            },
         ){ innerPadding ->
             SharedTransitionLayout {
                 NavHost(
@@ -101,8 +80,12 @@ fun App() {
                             onNoteClick = { note ->
                                 navController.navigateSingleTopTo(Route.NoteDetails(noteId = note.id))
                             },
+                            onFabClick = {
+                                navController.navigateSingleTopTo(Route.NoteDetails(0L))
+                            },
                             this@SharedTransitionLayout,
-                            this@composable
+                            this@composable,
+                            innerPadding
                         )
                     }
                     composable<Route.Profile> {

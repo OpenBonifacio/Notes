@@ -18,12 +18,10 @@ import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
-import androidx.compose.foundation.text.input.setTextAndSelectAll
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -107,78 +105,84 @@ fun NoteDetailsScreen(
         columnScrollableState.scrollTo(0)
     }
 
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            MediumTopAppBar(
-                title = {
-                    BasicTextField(
-                        state = titleTextState,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .nestedScroll(scrollBehavior.nestedScrollConnection),
-                        textStyle = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onSurface),
-                        lineLimits = TextFieldLineLimits.MultiLine(minHeightInLines = 1, maxHeightInLines = 2),
-                        decorator = @Composable { innerTextField ->
-                            Box(
-                                modifier = Modifier.fillMaxWidth(),
-                                contentAlignment = Alignment.CenterStart
-                            ) {
-                                // PLACEHOLDER
-                                if (titleTextState.text.isEmpty()) {
-                                    Text(
-                                        text = "Titre de la note...",
-                                        style = MaterialTheme.typography.titleLarge,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                                    )
+    with(sharedTransitionScope){
+        Scaffold(
+            modifier = Modifier
+                .fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
+                .sharedBounds(
+                    sharedContentState = rememberSharedContentState(
+                        key = if (state.note?.id == 0L) "new" else ""
+                    ),
+                    animatedVisibilityScope = animatedContentScope
+                ),
+            topBar = {
+                MediumTopAppBar(
+                    title = {
+                        BasicTextField(
+                            state = titleTextState,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .nestedScroll(scrollBehavior.nestedScrollConnection),
+                            textStyle = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onSurface),
+                            lineLimits = TextFieldLineLimits.MultiLine(minHeightInLines = 1, maxHeightInLines = 2),
+                            decorator = @Composable { innerTextField ->
+                                Box(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    contentAlignment = Alignment.CenterStart
+                                ) {
+                                    // PLACEHOLDER
+                                    if (titleTextState.text.isEmpty()) {
+                                        Text(
+                                            text = "Titre de la note...",
+                                            style = MaterialTheme.typography.titleLarge,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                                        )
+                                    }
+                                    innerTextField()
                                 }
-                                innerTextField()
                             }
-                        }
-                    )
+                        )
 
-                },
-                navigationIcon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        modifier = Modifier
-                            .clickable(onClick = { onAction(NoteDetailsAction.OnBackClick) })
-                            .minimumInteractiveComponentSize()
-                    )
-                },
-                actions = {
-                    Icon(
-                        imageVector = Icons.Outlined.Save,
-                        contentDescription = "Save",
-                        modifier = Modifier
-                            .minimumInteractiveComponentSize()
-                            .clickable(onClick = {
-                                onAction(NoteDetailsAction.OnSaveClick(
-                                    title = titleTextState.text.toString(),
-                                    content = contentTextState.text.toString()
-                                ))
-                                onAction(NoteDetailsAction.OnBackClick)
-                            })
-                    )
-                    Icon(
-                        imageVector = Icons.Outlined.Delete,
-                        contentDescription = "Delete",
-                        modifier = Modifier
-                            .minimumInteractiveComponentSize()
-                            .clickable(onClick = {
-                                onAction(NoteDetailsAction.OnDeleteClick)
-                                onAction(NoteDetailsAction.OnBackClick)
-                            })
-                    )
-                },
-                scrollBehavior = scrollBehavior
-            )
-        }
-    ) { innerPadding ->
-        with(sharedTransitionScope){
+                    },
+                    navigationIcon = {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            modifier = Modifier
+                                .clickable(onClick = { onAction(NoteDetailsAction.OnBackClick) })
+                                .minimumInteractiveComponentSize()
+                        )
+                    },
+                    actions = {
+                        Icon(
+                            imageVector = Icons.Outlined.Save,
+                            contentDescription = "Save",
+                            modifier = Modifier
+                                .minimumInteractiveComponentSize()
+                                .clickable(onClick = {
+                                    onAction(NoteDetailsAction.OnSaveClick(
+                                        title = titleTextState.text.toString(),
+                                        content = contentTextState.text.toString()
+                                    ))
+                                    onAction(NoteDetailsAction.OnBackClick)
+                                })
+                        )
+                        Icon(
+                            imageVector = Icons.Outlined.Delete,
+                            contentDescription = "Delete",
+                            modifier = Modifier
+                                .minimumInteractiveComponentSize()
+                                .clickable(onClick = {
+                                    onAction(NoteDetailsAction.OnDeleteClick)
+                                    onAction(NoteDetailsAction.OnBackClick)
+                                })
+                        )
+                    },
+                    scrollBehavior = scrollBehavior
+                )
+            }
+        ) { innerPadding ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()

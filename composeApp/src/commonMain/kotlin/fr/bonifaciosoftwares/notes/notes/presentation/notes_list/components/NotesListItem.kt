@@ -38,7 +38,13 @@ fun NotesListItem(
                     spotColor = Color.DarkGray.copy(alpha = 0.4f),
                     ambientColor = Color.DarkGray.copy(alpha = 0.4f),
                 )
-                .clickable(onClick = onNoteClick),
+                .clickable(onClick = onNoteClick)
+                /*.sharedBounds(
+                    sharedContentState = rememberSharedContentState(
+                        key = "content-${note.id}"
+                    ),
+                    animatedVisibilityScope = animatedContentScope
+                )*/,
             colors = CardDefaults.cardColors(
                 containerColor = Color.White
             ),
@@ -51,10 +57,10 @@ fun NotesListItem(
             ) {
                 Text(
                     text = note.title,
-                    modifier = Modifier.sharedElement(
+                    /*modifier = Modifier.sharedElement(
                         sharedTransitionScope.rememberSharedContentState(key = "title-${note.id}"),
                         animatedVisibilityScope = animatedContentScope
-                    ),
+                    ),*/
                     //fontWeight = FontWeight.SemiBold,
                     style = MaterialTheme.typography.titleMedium
                 )
