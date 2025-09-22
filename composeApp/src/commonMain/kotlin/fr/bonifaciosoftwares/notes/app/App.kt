@@ -1,7 +1,13 @@
 package fr.bonifaciosoftwares.notes.app
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -47,10 +53,18 @@ fun App() {
 
         Scaffold(
             bottomBar = {
-                if (currentRouteIsBottomBarRoute) {
-                    NavigationBar(
-
-                    ) {
+                AnimatedVisibility(
+                    visible = currentRouteIsBottomBarRoute,
+                    enter = fadeIn(animationSpec = tween(220)) + slideInVertically(
+                        animationSpec = tween(220),
+                        initialOffsetY = { fullHeight -> fullHeight }
+                    ),
+                    exit = fadeOut(animationSpec = tween(180)) + slideOutVertically(
+                        animationSpec = tween(180),
+                        targetOffsetY = { fullHeight -> fullHeight }
+                    )
+                ) {
+                    NavigationBar {
                         allBottomRoutes.forEach { bottomRoute ->
                             NavigationBarItem(
                                 label = { Text(bottomRoute.label) },
@@ -62,7 +76,6 @@ fun App() {
                                     it.hasRoute(bottomRoute.route::class)
                                 } == true
                             )
-
                         }
                     }
                 }
