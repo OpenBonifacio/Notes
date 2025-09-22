@@ -2,6 +2,7 @@ package fr.bonifaciosoftwares.notes.notes.data.repository
 
 import androidx.sqlite.SQLiteException
 import fr.bonifaciosoftwares.notes.core.domain.EmptyResult
+import fr.bonifaciosoftwares.notes.core.domain.Error
 import fr.bonifaciosoftwares.notes.core.domain.Result
 import fr.bonifaciosoftwares.notes.core.presentation.DataError
 import fr.bonifaciosoftwares.notes.notes.data.database.NotesDao
@@ -29,10 +30,10 @@ class DefaultNoteRepository(
         return notesDao.getNote(noteId)?.toNote()
     }
 
-    override suspend fun upsertNote(note: Note): EmptyResult<DataError.Local> {
+    override suspend fun upsertNote(note: Note): Result<Long, DataError.Local>{
         return try {
-            notesDao.upsert(note.toNoteEntity())
-            Result.Success(Unit)
+            val id: Long = notesDao.upsert(note.toNoteEntity())
+            Result.Success(id)
         }catch (e: SQLiteException){
             Result.Error(DataError.Local.DISK_FULL)
         }

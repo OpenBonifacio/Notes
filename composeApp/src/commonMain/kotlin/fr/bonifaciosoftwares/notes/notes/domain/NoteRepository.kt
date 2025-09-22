@@ -1,6 +1,7 @@
 package fr.bonifaciosoftwares.notes.notes.domain
 
 import fr.bonifaciosoftwares.notes.core.domain.EmptyResult
+import fr.bonifaciosoftwares.notes.core.domain.Result
 import fr.bonifaciosoftwares.notes.core.presentation.DataError
 import kotlinx.coroutines.flow.Flow
 
@@ -9,7 +10,7 @@ interface NoteRepository {
 
     suspend fun getNote(noteId: Long) : Note?
 
-    suspend fun upsertNote(note: Note) : EmptyResult<DataError.Local>
+    suspend fun upsertNote(note: Note) : Result<Long, DataError.Local>
 
     suspend fun deleteNote(note: Note) : EmptyResult<DataError.Local>
 

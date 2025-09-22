@@ -22,7 +22,7 @@ interface NotesDao {
     suspend fun updateNote(id: Long, title: String, content: String)
 
     @Upsert
-    suspend fun upsert(noteEntity: NoteEntity)
+    suspend fun upsert(noteEntity: NoteEntity) : Long
 }
 
 val allNotes = listOf(

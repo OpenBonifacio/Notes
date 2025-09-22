@@ -29,7 +29,6 @@ fun NoteDetailsTopAppBar(
     modifier: Modifier = Modifier,
     titleTextState: TextFieldState,
     scrollBehavior: TopAppBarScrollBehavior,
-    onSaveClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onBackClick: () -> Unit,
     onFavoriteClick: () -> Unit
@@ -73,13 +72,6 @@ fun NoteDetailsTopAppBar(
             )
         },
         actions = {
-            Icon(
-                imageVector = Icons.Outlined.Save,
-                contentDescription = "Save",
-                modifier = Modifier
-                    .minimumInteractiveComponentSize()
-                    .clickable(onClick = { onSaveClick() })
-            )
             Icon(
                 imageVector = Icons.Outlined.Delete,
                 contentDescription = "Delete",

@@ -27,12 +27,14 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.bonifaciosoftwares.notes.notes.presentation.note_details.components.NoteDetailsTopAppBar
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -81,12 +83,35 @@ fun NoteDetailsScreen(
         state.note?.content ?: ""
     )
 
+    /* Initialisation de la note */
     LaunchedEffect(state.note) {
         state.note?.let { note ->
             titleTextState.setTextAndPlaceCursorAtEnd(note.title)
             contentTextState.setTextAndPlaceCursorAtEnd(note.content)
-
         }
+    }
+
+    /* Change of Text */
+    LaunchedEffect(titleTextState){
+        snapshotFlow { titleTextState.text }
+            .distinctUntilChanged()
+            .collect { title ->
+                onAction(NoteDetailsAction.OnTextChange(
+                    title = title.toString(),
+                    content = contentTextState.text.toString()
+                ))
+            }
+    }
+
+    LaunchedEffect(contentTextState){
+        snapshotFlow { contentTextState.text }
+            .distinctUntilChanged()
+            .collect { content ->
+                onAction(NoteDetailsAction.OnTextChange(
+                    title = titleTextState.text.toString(),
+                    content = content.toString()
+                ))
+            }
     }
 
     val columnScrollableState = rememberScrollState()
@@ -112,20 +137,12 @@ fun NoteDetailsScreen(
                     modifier = Modifier,
                     titleTextState = titleTextState,
                     scrollBehavior = scrollBehavior,
-                    onSaveClick = {
-                        onAction(
-                            NoteDetailsAction.OnSaveClick(
-                                title = titleTextState.text.toString(),
-                                content = contentTextState.text.toString()
-                            )
-                        )
-                        onAction(NoteDetailsAction.OnBackClick)
-                    },
                     onDeleteClick = {
                         onAction(NoteDetailsAction.OnDeleteClick)
                         onAction(NoteDetailsAction.OnBackClick)
                     },
                     onBackClick = {
+                        onAction(NoteDetailsAction.OnSave)
                         onAction(NoteDetailsAction.OnBackClick)
                     },
                     onFavoriteClick = {

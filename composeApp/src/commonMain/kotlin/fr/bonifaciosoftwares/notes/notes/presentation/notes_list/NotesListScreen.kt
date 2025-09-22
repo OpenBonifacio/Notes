@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFloatingActionButton
@@ -44,9 +45,7 @@ fun NotesListScreenRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val topAppBarState = rememberTopAppBarState()
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
-        topAppBarState
-    )
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(topAppBarState)
 
     NotesListScreen(
         state = state,
@@ -84,27 +83,13 @@ fun NotesListScreen(
        Scaffold(
            modifier = Modifier
                .fillMaxSize()
-               .nestedScroll(scrollBehavior.nestedScrollConnection)
-               .padding(bottom = parrentPadding.calculateBottomPadding()),
+               .nestedScroll(scrollBehavior.nestedScrollConnection),
            topBar = {
-               MediumTopAppBar(
+               CenterAlignedTopAppBar(
                    title = {
                        Text("Notes")
                    },
                    scrollBehavior = scrollBehavior,
-                   actions = {
-                       Icon(
-                           imageVector = Icons.Outlined.Settings,
-                           contentDescription = "Settings",
-                           modifier = Modifier
-                               .minimumInteractiveComponentSize()
-                               .clickable(
-                                   onClick = {
-
-                                   }
-                               )
-                       )
-                   }
                )
            },
            floatingActionButton = {
@@ -115,7 +100,8 @@ fun NotesListScreen(
                                "new"
                            ),
                            animatedVisibilityScope = animatedContentScope
-                       ),
+                       )
+                       .padding(bottom = parrentPadding.calculateBottomPadding()),
                    onClick = {
                        onFabClick()
                    },
