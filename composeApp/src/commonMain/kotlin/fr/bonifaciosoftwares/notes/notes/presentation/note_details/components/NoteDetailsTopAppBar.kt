@@ -42,7 +42,10 @@ fun NoteDetailsTopAppBar(
                     .fillMaxWidth()
                     .nestedScroll(scrollBehavior.nestedScrollConnection),
                 textStyle = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onSurface),
-                lineLimits = TextFieldLineLimits.MultiLine(minHeightInLines = 1, maxHeightInLines = 2),
+                lineLimits = TextFieldLineLimits.MultiLine(
+                    minHeightInLines = 1,
+                    maxHeightInLines = 1
+                ),
                 decorator = @Composable { innerTextField ->
                     Box(
                         modifier = Modifier.fillMaxWidth(),

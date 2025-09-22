@@ -80,8 +80,8 @@ class NoteDetailsViewModel(
 
     private fun saveNote(){
         if (
-            state.value.note?.title.equals(editState.value.first)
-            && state.value.note?.content.equals(editState.value.second)
+            (state.value.note?.title.equals(editState.value.first)
+            && state.value.note?.content.equals(editState.value.second))
             ) return
 
         _state.update { current ->
@@ -96,15 +96,16 @@ class NoteDetailsViewModel(
         viewModelScope.launch {
             state.value.note?.let { it ->
                 if (it.id == 0L){
-                    noteRepository.upsertNote(it).onSuccess { newId ->
-                        _state.update { current ->
-                            current.copy(
-                                note = current.note?.copy(
-                                    id = newId
+                    if (editState.value.first.isNotEmpty() && editState.value.second.isNotEmpty())
+                        noteRepository.upsertNote(it).onSuccess { newId ->
+                            _state.update { current ->
+                                current.copy(
+                                    note = current.note?.copy(
+                                        id = newId
+                                    )
                                 )
-                            )
+                            }
                         }
-                    }
                 }else{
                     noteRepository.updateNote(it)
                 }
