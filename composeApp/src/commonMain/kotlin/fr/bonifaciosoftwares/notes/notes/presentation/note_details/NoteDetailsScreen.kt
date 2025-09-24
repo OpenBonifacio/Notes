@@ -17,6 +17,8 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -27,12 +29,16 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import fr.bonifaciosoftwares.notes.core.presentation.components.ConfirmationAlertDialog
 import fr.bonifaciosoftwares.notes.notes.presentation.note_details.components.NoteDetailsTopAppBar
 import kotlinx.coroutines.flow.distinctUntilChanged
 
@@ -116,6 +122,9 @@ fun NoteDetailsScreen(
 
     val columnScrollableState = rememberScrollState()
 
+    var showDialog by remember { mutableStateOf(false) }
+
+
     //Réinitialiser la page en haut
     LaunchedEffect(Unit) {
         columnScrollableState.scrollTo(0)
@@ -132,8 +141,9 @@ fun NoteDetailsScreen(
                     titleTextState = titleTextState,
                     scrollBehavior = scrollBehavior,
                     onDeleteClick = {
-                        onAction(NoteDetailsAction.OnDeleteClick)
-                        onAction(NoteDetailsAction.OnBackClick)
+                        /*onAction(NoteDetailsAction.OnDeleteClick)
+                        onAction(NoteDetailsAction.OnBackClick)*/
+                        showDialog = true
                     },
                     onBackClick = {
                         onAction(NoteDetailsAction.OnSave)
@@ -159,6 +169,23 @@ fun NoteDetailsScreen(
                         animatedVisibilityScope = animatedContentScope
                     )
             ) {
+
+                if (showDialog){
+                    ConfirmationAlertDialog(
+                        dialogTitle = "Suppression",
+                        dialogText = "Êtes vous sûr de vouloir supprimer cette note",
+                        icon = Icons.Default.Delete,
+                        onDismiss = {
+                            showDialog = false
+                        },
+                        onConfirm = {
+                            onAction(NoteDetailsAction.OnDeleteClick)
+                            onAction(NoteDetailsAction.OnBackClick)
+                            showDialog = false
+                        }
+                    )
+                }
+
                 BasicTextField(
                     state = contentTextState,
                     modifier = Modifier
