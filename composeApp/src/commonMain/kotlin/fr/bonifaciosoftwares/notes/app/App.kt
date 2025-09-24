@@ -30,6 +30,7 @@ import fr.bonifaciosoftwares.notes.notes.presentation.note_details.NoteDetailsSc
 import fr.bonifaciosoftwares.notes.notes.presentation.note_details.NoteDetailsViewModel
 import fr.bonifaciosoftwares.notes.notes.presentation.notes_list.NotesListScreenRoot
 import fr.bonifaciosoftwares.notes.notes.presentation.notes_list.NotesListViewModel
+import fr.bonifaciosoftwares.notes.notes.presentation.profile.ProfileScreenRoot
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -102,7 +103,9 @@ fun App() {
                         )
                     }
                     composable<Route.Profile> {
-                        Text("Coucou je suis la page de profil")
+                        ProfileScreenRoot(
+                            parrentPadding = innerPadding
+                        )
                     }
 
                     composable<Route.NoteDetails>{ backStackEntry ->

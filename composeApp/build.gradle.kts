@@ -60,6 +60,8 @@ kotlin {
 
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
+
+            implementation(libs.androidx.graphics.shapes)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

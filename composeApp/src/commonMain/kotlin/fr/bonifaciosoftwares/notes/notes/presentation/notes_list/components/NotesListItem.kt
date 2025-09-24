@@ -33,18 +33,18 @@ fun NotesListItem(
         ElevatedCard(
             modifier = modifier
                 .shadow(
-                    elevation = 5.dp,
+                    elevation = 3.dp,
                     shape = RoundedCornerShape(20.dp),
                     spotColor = Color.DarkGray.copy(alpha = 0.4f),
                     ambientColor = Color.DarkGray.copy(alpha = 0.4f),
                 )
                 .clickable(onClick = onNoteClick)
-                /*.sharedBounds(
+                .sharedElement(
                     sharedContentState = rememberSharedContentState(
                         key = "content-${note.id}"
                     ),
                     animatedVisibilityScope = animatedContentScope
-                )*/,
+                ),
             colors = CardDefaults.cardColors(
                 containerColor = Color.White
             ),
@@ -68,10 +68,10 @@ fun NotesListItem(
                     text = note.content,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.sharedElement(
+                    /*modifier = Modifier.sharedElement(
                         sharedTransitionScope.rememberSharedContentState(key = "content-${note.id}"),
                         animatedVisibilityScope = animatedContentScope
-                    )
+                    )*/
                 )
             }
         }

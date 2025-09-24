@@ -125,13 +125,7 @@ fun NoteDetailsScreen(
         Scaffold(
             modifier = Modifier
                 .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .sharedBounds(
-                    sharedContentState = rememberSharedContentState(
-                        key = if (state.note?.id == 0L) "new" else ""
-                    ),
-                    animatedVisibilityScope = animatedContentScope
-                ),
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
                 NoteDetailsTopAppBar(
                     modifier = Modifier,
@@ -147,7 +141,8 @@ fun NoteDetailsScreen(
                     },
                     onFavoriteClick = {
                         onAction(NoteDetailsAction.OnFavoriteClick)
-                    }
+                    },
+                    state = state
                 )
             }
         ) { innerPadding ->
@@ -157,15 +152,21 @@ fun NoteDetailsScreen(
                     .padding(innerPadding)
                     .verticalScroll(columnScrollableState)
                     .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .sharedElement(
+                        sharedContentState = rememberSharedContentState(
+                            key = if (state.note?.id == 0L) "new" else "content-${state.note?.id}"
+                        ),
+                        animatedVisibilityScope = animatedContentScope
+                    )
             ) {
                 BasicTextField(
                     state = contentTextState,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .sharedElement(
+                        /*.sharedElement(
                             sharedContentState = sharedTransitionScope.rememberSharedContentState(key = "content-${state.note?.id ?: "new"}"),
                             animatedVisibilityScope = animatedContentScope
-                        ),
+                        )*/,
                     textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
                     decorator = @Composable { innerTextField ->
                         Box(

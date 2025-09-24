@@ -9,8 +9,8 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import fr.bonifaciosoftwares.notes.notes.presentation.note_details.NoteDetailsState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,7 +32,8 @@ fun NoteDetailsTopAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
     onDeleteClick: () -> Unit,
     onBackClick: () -> Unit,
-    onFavoriteClick: () -> Unit
+    onFavoriteClick: () -> Unit,
+    state: NoteDetailsState
 ){
     MediumTopAppBar(
         modifier = modifier,
@@ -84,7 +86,7 @@ fun NoteDetailsTopAppBar(
             )
 
             Icon(
-                imageVector = Icons.Outlined.FavoriteBorder,
+                imageVector = if (state.note?.isFavorite == true) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
                 contentDescription = "Favorite",
                 modifier = Modifier
                     .minimumInteractiveComponentSize()

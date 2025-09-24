@@ -6,5 +6,5 @@ import fr.bonifaciosoftwares.notes.notes.domain.Note
 data class NoteDetailsState(
     val note: Note? = null,
     val isLoading: Boolean = true,
-    val errorMessage: UiText? = null
+    val errorMessage: UiText? = null,
 )

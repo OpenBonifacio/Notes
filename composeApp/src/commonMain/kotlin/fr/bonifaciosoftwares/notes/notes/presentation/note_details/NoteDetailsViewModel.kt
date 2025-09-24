@@ -51,7 +51,7 @@ class NoteDetailsViewModel(
             }
 
             is NoteDetailsAction.OnFavoriteClick -> {
-                saveNote()
+                markAsFavorite()
             }
 
             is NoteDetailsAction.OnTextChange -> {
@@ -61,6 +61,14 @@ class NoteDetailsViewModel(
                         second = action.content
                     )
                 }
+            }
+        }
+    }
+
+    private fun markAsFavorite(){
+        viewModelScope.launch {
+            state.value.note?.let {
+                //noteRepository.updateNote(it.copy(isFavorite = !it.isFavorite))
             }
         }
     }
@@ -96,7 +104,7 @@ class NoteDetailsViewModel(
         viewModelScope.launch {
             state.value.note?.let { it ->
                 if (it.id == 0L){
-                    if (editState.value.first.isNotEmpty() && editState.value.second.isNotEmpty())
+                    if (editState.value.first.isNotEmpty() || editState.value.second.isNotEmpty())
                         noteRepository.upsertNote(it).onSuccess { newId ->
                             _state.update { current ->
                                 current.copy(
