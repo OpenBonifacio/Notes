@@ -92,6 +92,13 @@ class NoteDetailsViewModel(
             && state.value.note?.content.equals(editState.value.second))
             ) return
 
+
+        if (
+            editState.value.first.isEmpty() && editState.value.second.isEmpty()
+        ){
+            onAction(NoteDetailsAction.OnDeleteClick)
+        }
+
         _state.update { current ->
             current.copy(
                 note = current.note?.copy(
