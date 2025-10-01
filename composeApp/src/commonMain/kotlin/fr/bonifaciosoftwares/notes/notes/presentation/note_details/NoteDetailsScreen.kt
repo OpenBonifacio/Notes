@@ -13,9 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -32,7 +29,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -40,7 +36,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.bonifaciosoftwares.notes.core.presentation.components.ConfirmationAlertDialog
 import fr.bonifaciosoftwares.notes.notes.presentation.note_details.components.NoteDetailsTopAppBar
-import kotlinx.coroutines.flow.distinctUntilChanged
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -54,7 +49,6 @@ fun NoteDetailsScreenRoot(
 
     val topAppBarState = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(topAppBarState) // Ou le behavior désiré pour les détails
-
 
     NoteDetailsScreen(
         state = state,
@@ -81,44 +75,25 @@ fun NoteDetailsScreen(
     scrollBehavior: TopAppBarScrollBehavior
 ) {
 
-    val titleTextState: TextFieldState = rememberTextFieldState(
+    var titleText by remember { mutableStateOf(
         state.note?.title ?: ""
-    )
+    )}
 
-    val contentTextState = rememberTextFieldState(
+    var contentText by remember { mutableStateOf(
         state.note?.content ?: ""
-    )
+    ) }
 
-    /* Initialisation de la note */
-    LaunchedEffect(state.note) {
-        state.note?.let { note ->
-            titleTextState.setTextAndPlaceCursorAtEnd(note.title)
-            contentTextState.setTextAndPlaceCursorAtEnd(note.content)
-        }
+    LaunchedEffect(state.note?.id) {
+        contentText = state.note?.content ?: ""
     }
 
-    /* Change of Text */
-    LaunchedEffect(titleTextState){
-        snapshotFlow { titleTextState.text }
-            .distinctUntilChanged()
-            .collect { title ->
-                onAction(NoteDetailsAction.OnTextChange(
-                    title = title.toString(),
-                    content = contentTextState.text.toString()
-                ))
-            }
+    LaunchedEffect(titleText, contentText) {
+        onAction(NoteDetailsAction.OnTextChange(
+            title = titleText,
+            content = contentText
+        ))
     }
 
-    LaunchedEffect(contentTextState){
-        snapshotFlow { contentTextState.text }
-            .distinctUntilChanged()
-            .collect { content ->
-                onAction(NoteDetailsAction.OnTextChange(
-                    title = titleTextState.text.toString(),
-                    content = content.toString()
-                ))
-            }
-    }
 
     val columnScrollableState = rememberScrollState()
 
@@ -138,7 +113,7 @@ fun NoteDetailsScreen(
             topBar = {
                 NoteDetailsTopAppBar(
                     modifier = Modifier,
-                    titleTextState = titleTextState,
+                    titleText = titleText,
                     scrollBehavior = scrollBehavior,
                     onDeleteClick = {
                         /*onAction(NoteDetailsAction.OnDeleteClick)
@@ -152,7 +127,9 @@ fun NoteDetailsScreen(
                     onFavoriteClick = {
                         onAction(NoteDetailsAction.OnFavoriteClick)
                     },
-                    state = state
+                    onTitleChange = {
+                        titleText = it
+                    }
                 )
             }
         ) { innerPadding ->
@@ -187,20 +164,23 @@ fun NoteDetailsScreen(
                 }
 
                 BasicTextField(
-                    state = contentTextState,
+                    value = contentText,
+                    onValueChange = {
+                        contentText = it
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
-                        /*.sharedElement(
-                            sharedContentState = sharedTransitionScope.rememberSharedContentState(key = "content-${state.note?.id ?: "new"}"),
-                            animatedVisibilityScope = animatedContentScope
-                        )*/,
+                    /*.sharedElement(
+                        sharedContentState = sharedTransitionScope.rememberSharedContentState(key = "content-${state.note?.id ?: "new"}"),
+                        animatedVisibilityScope = animatedContentScope
+                    )*/,
                     textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
-                    decorator = @Composable { innerTextField ->
+                    decorationBox = @Composable { innerTextField ->
                         Box(
                             modifier = Modifier.fillMaxWidth(),
                             contentAlignment = Alignment.CenterStart
                         ) {
-                            if (contentTextState.text.isEmpty()) {
+                            if (contentText.isEmpty()) {
                                 Text(
                                     text = "Contenue de la note...",
                                     style = MaterialTheme.typography.bodyLarge,

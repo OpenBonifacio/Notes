@@ -2,6 +2,7 @@ package fr.bonifaciosoftwares.notes.notes.presentation.note_details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.bonifaciosoftwares.notes.core.domain.onError
 import fr.bonifaciosoftwares.notes.core.domain.onSuccess
 import fr.bonifaciosoftwares.notes.notes.domain.Note
 import fr.bonifaciosoftwares.notes.notes.domain.NoteRepository
@@ -11,7 +12,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -28,7 +28,7 @@ class NoteDetailsViewModel(
     val state = _state
         .onStart {
             fetchNoteDetails()
-            observeEditState()
+            //observeEditState()
         }
         .stateIn(
             viewModelScope,
@@ -55,12 +55,16 @@ class NoteDetailsViewModel(
             }
 
             is NoteDetailsAction.OnTextChange -> {
-                editState.update {
-                    it.copy(
-                        first = action.title,
-                        second = action.content
+                _state.update { current ->
+                    current.copy(
+                        note = current.note?.copy(
+                            title = action.title,
+                            content = action.content
+                        )
                     )
                 }
+
+                println("noteeeee ${state.value.note?.content}")
             }
         }
     }
@@ -87,31 +91,31 @@ class NoteDetailsViewModel(
     }
 
     private fun saveNote(){
-        if (
+        /*if (
             (state.value.note?.title.equals(editState.value.first)
             && state.value.note?.content.equals(editState.value.second))
-            ) return
+            ) return*/
 
 
-        if (
+        /*if (
             editState.value.first.isEmpty() && editState.value.second.isEmpty()
         ){
             onAction(NoteDetailsAction.OnDeleteClick)
-        }
+        }*/
 
-        _state.update { current ->
+        /*_state.update { current ->
             current.copy(
                 note = current.note?.copy(
                     title = editState.value.first,
                     content = editState.value.second
                 )
             )
-        }
+        }*/
 
         viewModelScope.launch {
             state.value.note?.let { it ->
                 if (it.id == 0L){
-                    if (editState.value.first.isNotEmpty() || editState.value.second.isNotEmpty())
+                    /*if (editState.value.first.isNotEmpty() || editState.value.second.isNotEmpty())*/
                         noteRepository.upsertNote(it).onSuccess { newId ->
                             _state.update { current ->
                                 current.copy(
@@ -120,6 +124,9 @@ class NoteDetailsViewModel(
                                     )
                                 )
                             }
+                            println("je suis iciiiiiii avec l'id $newId")
+                        }.onError {
+                            println("biggggg erreur")
                         }
                 }else{
                     noteRepository.updateNote(it)
