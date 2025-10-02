@@ -74,11 +74,11 @@ kotlin {
 }
 
 android {
-    namespace = "fr.bonifaciosoftwares.notes"
+    namespace = "fr.openbonifacio.notes"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "fr.bonifaciosoftwares.notes"
+        applicationId = "fr.openbonifacio.notes"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -106,11 +106,11 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "fr.bonifaciosoftwares.notes.MainKt"
+        mainClass = "fr.openbonifacio.notes.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "fr.bonifaciosoftwares.notes"
+            packageName = "fr.openbonifacio.notes"
             packageVersion = "1.0.0"
         }
     }
