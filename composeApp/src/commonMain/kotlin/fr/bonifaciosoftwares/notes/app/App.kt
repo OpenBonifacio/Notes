@@ -42,10 +42,8 @@ fun App() {
     MaterialTheme{
 
         val navController = rememberNavController()
-
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
-
         val currentRouteIsBottomBarRoute = allBottomRoutes.any { bottomRoute ->
             currentDestination?.hierarchy?.any {
                 it.hasRoute(bottomRoute.route::class)

@@ -85,6 +85,7 @@ fun NoteDetailsScreen(
 
     LaunchedEffect(state.note?.id) {
         contentText = state.note?.content ?: ""
+        titleText = state.note?.title ?: ""
     }
 
     LaunchedEffect(titleText, contentText) {

@@ -24,11 +24,10 @@ class NoteDetailsViewModel(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(NoteDetailsState())
-    private val editState = MutableStateFlow(Pair("", ""))
     val state = _state
         .onStart {
             fetchNoteDetails()
-            //observeEditState()
+            observeEditState()
         }
         .stateIn(
             viewModelScope,
@@ -51,7 +50,7 @@ class NoteDetailsViewModel(
             }
 
             is NoteDetailsAction.OnFavoriteClick -> {
-                markAsFavorite()
+                //markAsFavorite()
             }
 
             is NoteDetailsAction.OnTextChange -> {
@@ -64,58 +63,44 @@ class NoteDetailsViewModel(
                     )
                 }
 
-                println("noteeeee ${state.value.note?.content}")
+                println("note saving ${state.value.note?.content} - ${state.value.note?.title}")
             }
         }
     }
 
-    private fun markAsFavorite(){
+    /*private fun markAsFavorite(){
         viewModelScope.launch {
             state.value.note?.let {
                 //noteRepository.updateNote(it.copy(isFavorite = !it.isFavorite))
             }
         }
-    }
+    }*/
 
     @OptIn(FlowPreview::class)
     private fun observeEditState(){
-        editState
+        state
             .debounce(1000L)
             .onEach {
                 saveNote()
             }
             .distinctUntilChanged { old, new ->
-                old.first == new.first && old.second == new.second
+                old.note?.title == new.note?.title && old.note?.content == new.note?.title
             }
             .launchIn(viewModelScope)
     }
 
     private fun saveNote(){
-        /*if (
-            (state.value.note?.title.equals(editState.value.first)
-            && state.value.note?.content.equals(editState.value.second))
-            ) return*/
-
-
-        /*if (
-            editState.value.first.isEmpty() && editState.value.second.isEmpty()
+        if (
+            state.value.note?.title?.isEmpty() == true &&
+            state.value.note?.content?.isEmpty() == true
         ){
-            onAction(NoteDetailsAction.OnDeleteClick)
-        }*/
-
-        /*_state.update { current ->
-            current.copy(
-                note = current.note?.copy(
-                    title = editState.value.first,
-                    content = editState.value.second
-                )
-            )
-        }*/
+            if (noteId == 0L) return
+            else onAction(NoteDetailsAction.OnDeleteClick)
+        }
 
         viewModelScope.launch {
             state.value.note?.let { it ->
                 if (it.id == 0L){
-                    /*if (editState.value.first.isNotEmpty() || editState.value.second.isNotEmpty())*/
                         noteRepository.upsertNote(it).onSuccess { newId ->
                             _state.update { current ->
                                 current.copy(
@@ -124,9 +109,6 @@ class NoteDetailsViewModel(
                                     )
                                 )
                             }
-                            println("je suis iciiiiiii avec l'id $newId")
-                        }.onError {
-                            println("biggggg erreur")
                         }
                 }else{
                     noteRepository.updateNote(it)
