@@ -1,7 +1,10 @@
 package fr.openbonifacio.notes.notes.presentation.note_details.components
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -15,6 +18,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
@@ -24,51 +29,29 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteDetailsTopAppBar(
     modifier: Modifier = Modifier,
-    titleText: String,
     scrollBehavior: TopAppBarScrollBehavior,
     onDeleteClick: () -> Unit,
     onBackClick: () -> Unit,
     onFavoriteClick: () -> Unit,
-    onTitleChange: (String) -> Unit,
+    scrollState: ScrollState
 ){
-    MediumTopAppBar(
-        modifier = modifier,
-        title = {
-            BasicTextField(
-                value = titleText,
-                onValueChange = {
-                    onTitleChange(it)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .nestedScroll(scrollBehavior.nestedScrollConnection),
-                textStyle = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onSurface),
-                singleLine = true,
-                decorationBox = @Composable { innerTextField ->
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.CenterStart
-                    ) {
-                        // PLACEHOLDER
-                        if (titleText.isEmpty()) {
-                            Text(
-                                text = "Titre de la note...",
-                                style = MaterialTheme.typography.titleLarge,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                            )
-                        }
-                        innerTextField()
-                    }
-                }
-            )
 
-        },
+    val scrolled = scrollState.value > 0
+    val targetElevation = if (scrolled) 6.dp else 0.dp
+    val elevation by animateDpAsState(targetElevation)
+
+    TopAppBar(
+        modifier = modifier
+            .shadow(elevation),
+        title = {},
         navigationIcon = {
             IconButton(
                 modifier = modifier.minimumInteractiveComponentSize(),
