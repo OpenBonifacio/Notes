@@ -44,7 +44,6 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
@@ -52,6 +51,8 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.navigation.compose)
+            implementation("org.jetbrains.compose.material3:material3:1.9.0-alpha04")
+
 
             api(libs.koin.core)
             implementation(libs.koin.compose)
