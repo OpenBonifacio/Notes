@@ -117,8 +117,6 @@ fun App() {
                                 parameters = { parametersOf(noteIdFromRoute) }
                             ),
                             onBackClick = { navController.popBackStack() },
-                            this@SharedTransitionLayout,
-                            this@composable,
                         )
                     }
                 }

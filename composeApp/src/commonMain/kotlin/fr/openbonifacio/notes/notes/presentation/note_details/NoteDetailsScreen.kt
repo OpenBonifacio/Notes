@@ -1,9 +1,7 @@
 package fr.openbonifacio.notes.notes.presentation.note_details
 
 
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -51,8 +49,6 @@ import fr.openbonifacio.notes.notes.presentation.note_details.components.NoteDet
 fun NoteDetailsScreenRoot(
     viewModel: NoteDetailsViewModel,
     onBackClick: () -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedContentScope: AnimatedContentScope,
 ){
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -68,8 +64,6 @@ fun NoteDetailsScreenRoot(
             }
             viewModel.onAction(action)
         },
-        sharedTransitionScope,
-        animatedContentScope,
         scrollBehavior
     )
 }
@@ -79,8 +73,6 @@ fun NoteDetailsScreenRoot(
 fun NoteDetailsScreen(
     state: NoteDetailsState,
     onAction: (NoteDetailsAction) -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedContentScope: AnimatedContentScope,
     scrollBehavior: TopAppBarScrollBehavior
 ) {
 
@@ -125,15 +117,13 @@ fun NoteDetailsScreen(
         scrollState.animateScrollTo(scrollState.maxValue)
     }
 
-    with(sharedTransitionScope){
+
         Scaffold(
             topBar = {
                 NoteDetailsTopAppBar(
                     modifier = Modifier,
                     scrollBehavior = scrollBehavior,
                     onDeleteClick = {
-                        /*onAction(NoteDetailsAction.OnDeleteClick)
-                        onAction(NoteDetailsAction.OnBackClick)*/
                         showDialog = true
                     },
                     onBackClick = {
@@ -229,162 +219,4 @@ fun NoteDetailsScreen(
                 )
             }
         }
-    }
 }
-
-    /*var titleText by remember { mutableStateOf(
-        state.note?.title ?: ""
-    )}
-
-    var contentText by remember { mutableStateOf(
-        state.note?.content ?: ""
-    ) }
-
-    LaunchedEffect(state.note?.id) {
-        contentText = state.note?.content ?: ""
-        titleText = state.note?.title ?: ""
-    }
-
-    LaunchedEffect(titleText, contentText) {
-        onAction(NoteDetailsAction.OnTextChange(
-            title = titleText,
-            content = contentText
-        ))
-    }
-
-
-    val columnScrollableState = rememberScrollState()
-
-    var showDialog by remember { mutableStateOf(false) }
-
-
-    //Réinitialiser la page en haut
-    LaunchedEffect(Unit) {
-        columnScrollableState.scrollTo(0)
-    }
-
-    val bringIntoViewRequester = remember { BringIntoViewRequester() }
-    val coroutineScope = rememberCoroutineScope()
-
-    with(sharedTransitionScope){
-        Scaffold(
-            modifier = Modifier
-                .fillMaxSize()
-                //.nestedScroll(scrollBehavior.nestedScrollConnection)
-                .sharedElement(
-                    sharedContentState = rememberSharedContentState(
-                        key = if (state.note?.id == 0L) "new" else "content-${state.note?.id}"
-                    ),
-                    animatedVisibilityScope = animatedContentScope
-                ),
-                contentWindowInsets = WindowInsets.systemBars,
-            topBar = {
-                NoteDetailsTopAppBar(
-                    modifier = Modifier,
-                    scrollBehavior = scrollBehavior,
-                    onDeleteClick = {
-                        /*onAction(NoteDetailsAction.OnDeleteClick)
-                        onAction(NoteDetailsAction.OnBackClick)*/
-                        showDialog = true
-                    },
-                    onBackClick = {
-                        onAction(NoteDetailsAction.OnSave)
-                        onAction(NoteDetailsAction.OnBackClick)
-                    },
-                    onFavoriteClick = {
-                        onAction(NoteDetailsAction.OnFavoriteClick)
-                    },
-                    scrollState = columnScrollableState
-                )
-            }
-        ) { innerPadding ->
-            Box (
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize()
-                    .imePadding()
-                    //.verticalScroll(columnScrollableState)
-            ){
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                ) {
-
-                    if (showDialog) {
-                        ConfirmationAlertDialog(
-                            dialogTitle = "Suppression",
-                            dialogText = "Êtes vous sûr de vouloir supprimer cette note",
-                            icon = Icons.Default.Delete,
-                            onDismiss = {
-                                showDialog = false
-                            },
-                            onConfirm = {
-                                onAction(NoteDetailsAction.OnDeleteClick)
-                                onAction(NoteDetailsAction.OnBackClick)
-                                showDialog = false
-                            }
-                        )
-                    }
-
-                    BasicTextField(
-                        value = titleText,
-                        onValueChange = {
-                            titleText = it
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        textStyle = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onSurface),
-                        singleLine = true,
-                        decorationBox = @Composable { innerTextField ->
-                            Box(
-                                modifier = Modifier.fillMaxWidth(),
-                                contentAlignment = Alignment.CenterStart
-                            ) {
-                                // PLACEHOLDER
-                                if (titleText.isEmpty()) {
-                                    Text(
-                                        text = "Titre de la note...",
-                                        style = MaterialTheme.typography.titleLarge,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                                            alpha = 0.6f
-                                        )
-                                    )
-                                }
-                                innerTextField()
-                            }
-                        }
-                    )
-
-                    Spacer(Modifier.height(16.dp))
-
-                    BasicTextField(
-                        value = contentText,
-                        onValueChange = {
-                            contentText = it
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
-                        decorationBox = @Composable { innerTextField ->
-                            Box(
-                                modifier = Modifier.fillMaxWidth(),
-                                contentAlignment = Alignment.CenterStart
-                            ) {
-                                if (contentText.isEmpty()) {
-                                    Text(
-                                        text = "Contenue de la note...",
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
-                                            alpha = 0.6f
-                                        )
-                                    )
-                                }
-                                innerTextField()
-                            }
-                        }
-                    )
-                }
-            }
-        }
-    }*/
