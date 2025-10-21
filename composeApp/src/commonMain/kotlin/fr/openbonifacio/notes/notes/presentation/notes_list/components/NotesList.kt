@@ -1,8 +1,6 @@
 package fr.openbonifacio.notes.notes.presentation.notes_list.components
 
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -24,8 +22,6 @@ fun NotesList(
     scrollState: LazyListState = rememberLazyListState(),
     notes: List<Note>,
     onNoteClick: (Note) -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedContentScope: AnimatedContentScope,
 ){
     LazyColumn(
         state = scrollState,
@@ -45,8 +41,6 @@ fun NotesList(
                     .fillMaxWidth()
                     .padding(horizontal = 18.dp),
                 onNoteClick = { onNoteClick(note) },
-                sharedTransitionScope,
-                animatedContentScope
             )
         }
 

@@ -170,13 +170,6 @@ fun NoteDetailsScreen(
                     },
                     scrollState = scrollState            )
             },
-            modifier = Modifier
-                .sharedElement(
-                    sharedContentState = rememberSharedContentState(
-                        key = if (state.note?.id == 0L) "new" else "content-${state.note?.id}"
-                    ),
-                    animatedVisibilityScope = animatedContentScope
-                ),
             contentWindowInsets = WindowInsets.systemBars,
         ){ innerPadding ->
             Column(

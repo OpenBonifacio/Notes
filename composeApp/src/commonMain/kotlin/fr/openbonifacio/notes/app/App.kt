@@ -6,6 +6,8 @@ import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -95,9 +97,7 @@ fun App() {
                             onFabClick = {
                                 navController.navigateSingleTopTo(Route.NoteDetails(0L))
                             },
-                            this@SharedTransitionLayout,
-                            this@composable,
-                            innerPadding
+                            parrentPadding = innerPadding
                         )
                     }
                     composable<Route.Profile> {
@@ -105,8 +105,10 @@ fun App() {
                             parrentPadding = innerPadding
                         )
                     }
-
-                    composable<Route.NoteDetails>{ backStackEntry ->
+                    composable<Route.NoteDetails>(
+                        enterTransition = { scaleIn() },
+                        exitTransition = { scaleOut() }
+                    ){ backStackEntry ->
                         val routeArgs: Route.NoteDetails = backStackEntry.toRoute() // Extension de la lib navigation-compose
                         val noteIdFromRoute = routeArgs.noteId
 
