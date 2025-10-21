@@ -10,9 +10,9 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -28,6 +28,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import fr.openbonifacio.notes.core.presentation.theme.NotesTheme
 import fr.openbonifacio.notes.notes.presentation.note_details.NoteDetailsScreenRoot
 import fr.openbonifacio.notes.notes.presentation.note_details.NoteDetailsViewModel
 import fr.openbonifacio.notes.notes.presentation.notes_list.NotesListScreenRoot
@@ -41,8 +42,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 @Preview
 fun App() {
-    MaterialTheme{
-
+    NotesTheme(darkTheme = isSystemInDarkTheme()){
         val navController = rememberNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination

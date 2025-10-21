@@ -1,8 +1,6 @@
 package fr.openbonifacio.notes.notes.presentation.notes_list.components
 
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -14,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import fr.openbonifacio.notes.notes.domain.Note
@@ -31,12 +28,12 @@ fun NotesListItem(
             .shadow(
                 elevation = 3.dp,
                 shape = RoundedCornerShape(20.dp),
-                spotColor = Color.DarkGray.copy(alpha = 0.4f),
-                ambientColor = Color.DarkGray.copy(alpha = 0.4f),
+                spotColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
+                ambientColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
             )
             .clickable(onClick = onNoteClick),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
         ),
         shape = RoundedCornerShape(20.dp),
     ) {
@@ -47,21 +44,12 @@ fun NotesListItem(
         ) {
             Text(
                 text = note.title,
-                /*modifier = Modifier.sharedElement(
-                    sharedTransitionScope.rememberSharedContentState(key = "title-${note.id}"),
-                    animatedVisibilityScope = animatedContentScope
-                ),*/
-                //fontWeight = FontWeight.SemiBold,
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
                 text = note.content,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                /*modifier = Modifier.sharedElement(
-                    sharedTransitionScope.rememberSharedContentState(key = "content-${note.id}"),
-                    animatedVisibilityScope = animatedContentScope
-                )*/
             )
         }
     }
