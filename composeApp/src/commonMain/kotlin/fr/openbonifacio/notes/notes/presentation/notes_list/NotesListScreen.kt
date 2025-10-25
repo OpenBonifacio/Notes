@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import fr.openbonifacio.notes.core.presentation.theme.lobsterTwoFamily
 import fr.openbonifacio.notes.notes.domain.Note
 import fr.openbonifacio.notes.notes.presentation.notes_list.components.NotesList
 
@@ -74,7 +75,10 @@ fun NotesListScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text("Notes")
+                    Text(
+                        text = "Notes",
+                        fontFamily = lobsterTwoFamily()
+                    )
                 },
                 scrollBehavior = scrollBehavior,
             )

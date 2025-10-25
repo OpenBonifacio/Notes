@@ -15,6 +15,6 @@ fun NotesTheme(darkTheme: Boolean = false, content: @Composable () -> Unit) {
     MaterialTheme(
         content = content,
         colorScheme = colorScheme,
-        typography = NotesTypography,
+        typography = notesTypography(),
     )
 }

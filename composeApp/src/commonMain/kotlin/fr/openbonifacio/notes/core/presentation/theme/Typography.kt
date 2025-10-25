@@ -1,5 +1,7 @@
 package fr.openbonifacio.notes.core.presentation.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.runtime.Composable
 
-val NotesTypography = Typography()
+@Composable
+fun notesTypography() = Typography()
