@@ -28,7 +28,7 @@ fun NotesList(
         modifier = modifier
             .fillMaxWidth()
             .fillMaxHeight(),
-        verticalArrangement = Arrangement.spacedBy(18.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
         contentPadding = PaddingValues(bottom = 120.dp, top = 18.dp)
     ){
         items(

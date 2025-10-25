@@ -133,9 +133,12 @@ fun NoteDetailsScreen(
                     onFavoriteClick = {
                         onAction(NoteDetailsAction.OnFavoriteClick)
                     },
-                    scrollState = scrollState            )
+                    scrollState = scrollState
+                )
             },
             contentWindowInsets = WindowInsets.systemBars,
+            contentColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
         ){ innerPadding ->
             Column(
                 modifier = Modifier

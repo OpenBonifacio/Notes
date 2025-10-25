@@ -4,4 +4,10 @@ import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 
 @Composable
-fun notesTypography() = Typography()
+fun notesTypography() = Typography().run {
+    copy(
+        headlineLarge = headlineLarge.copy(
+            fontFamily = lobsterTwoFamily()
+        )
+    )
+}

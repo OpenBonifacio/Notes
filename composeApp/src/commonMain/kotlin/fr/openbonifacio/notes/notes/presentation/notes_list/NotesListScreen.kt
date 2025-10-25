@@ -11,6 +11,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -21,7 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import fr.openbonifacio.notes.core.presentation.theme.lobsterTwoFamily
 import fr.openbonifacio.notes.notes.domain.Note
 import fr.openbonifacio.notes.notes.presentation.notes_list.components.NotesList
 
@@ -77,7 +77,7 @@ fun NotesListScreen(
                 title = {
                     Text(
                         text = "Notes",
-                        fontFamily = lobsterTwoFamily()
+                        style = MaterialTheme.typography.headlineLarge
                     )
                 },
                 scrollBehavior = scrollBehavior,
