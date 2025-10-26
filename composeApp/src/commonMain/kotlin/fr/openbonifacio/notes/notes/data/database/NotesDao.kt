@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NotesDao {
 
-    @Query("SELECT * FROM NoteEntity")
+    @Query("SELECT * FROM NoteEntity ORDER BY updatedAt DESC")
     fun getNotes() : Flow<List<NoteEntity>>
 
     @Query("SELECT * FROM NoteEntity WHERE id = :id")

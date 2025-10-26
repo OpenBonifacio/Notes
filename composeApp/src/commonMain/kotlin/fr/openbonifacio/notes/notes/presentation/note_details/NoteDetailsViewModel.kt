@@ -2,7 +2,6 @@ package fr.openbonifacio.notes.notes.presentation.note_details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fr.openbonifacio.notes.core.domain.onError
 import fr.openbonifacio.notes.core.domain.onSuccess
 import fr.openbonifacio.notes.notes.domain.Note
 import fr.openbonifacio.notes.notes.domain.NoteRepository
