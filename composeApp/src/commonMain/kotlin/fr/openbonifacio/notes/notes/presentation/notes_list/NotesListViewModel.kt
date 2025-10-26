@@ -2,8 +2,6 @@ package fr.openbonifacio.notes.notes.presentation.notes_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fr.openbonifacio.notes.notes.data.database.allNotes
-import fr.openbonifacio.notes.notes.data.mappers.toNote
 import fr.openbonifacio.notes.notes.domain.NoteRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow

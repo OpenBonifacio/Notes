@@ -17,10 +17,14 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
@@ -32,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentDataType.Companion.Date
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
@@ -42,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.openbonifacio.notes.core.presentation.components.ConfirmationAlertDialog
+import fr.openbonifacio.notes.core.util.TimeProvider
 import fr.openbonifacio.notes.notes.presentation.note_details.components.NoteDetailsTopAppBar
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
@@ -111,7 +117,8 @@ fun NoteDetailsScreen(
 
     val focusRequester = remember { FocusRequester() }
 
-    var showDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var showInfoDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(contentValue.selection) {
         scrollState.animateScrollTo(scrollState.maxValue)
@@ -124,7 +131,7 @@ fun NoteDetailsScreen(
                     modifier = Modifier,
                     scrollBehavior = scrollBehavior,
                     onDeleteClick = {
-                        showDialog = true
+                        showDeleteDialog = true
                     },
                     onBackClick = {
                         onAction(NoteDetailsAction.OnSave)
@@ -132,6 +139,9 @@ fun NoteDetailsScreen(
                     },
                     onFavoriteClick = {
                         onAction(NoteDetailsAction.OnFavoriteClick)
+                    },
+                    onInfoClick = {
+                        showInfoDialog = true
                     },
                     scrollState = scrollState
                 )
@@ -148,19 +158,45 @@ fun NoteDetailsScreen(
                     .verticalScroll(scrollState)
             ) {
 
-                if (showDialog) {
+                if (showDeleteDialog) {
                     ConfirmationAlertDialog(
                         dialogTitle = "Suppression",
                         dialogText = "Êtes vous sûr de vouloir supprimer cette note",
                         icon = Icons.Default.Delete,
                         onDismiss = {
-                            showDialog = false
+                            showDeleteDialog = false
                         },
                         onConfirm = {
                             onAction(NoteDetailsAction.OnDeleteClick)
                             onAction(NoteDetailsAction.OnBackClick)
-                            showDialog = false
+                            showDeleteDialog = false
                         }
+                    )
+                }
+
+                if (showInfoDialog){
+                    AlertDialog(
+                        icon = {
+                            Icon(Icons.Outlined.Info, contentDescription = "Info Icon")
+                        },
+                        title = { state.note?.title?.let { Text(text = it) } },
+                        text = {
+                            state.note?.let {
+                                Column {
+                                    if (it.createdAt != 0L)
+                                        Text("Créé le ${TimeProvider.formatMillis(it.createdAt)}")
+
+                                    if (it.updatedAt != 0L)
+                                        Text("Modifié le ${TimeProvider.formatMillis(it.updatedAt)}")
+
+                                    Text("Caractères: ${it.title.length + it.content.length}")
+                                }
+                            }
+                        },
+                        onDismissRequest = { showInfoDialog = false },
+                        confirmButton = {
+                            TextButton(onClick = { showInfoDialog = false }) { Text("Ok") }
+                        },
                     )
                 }
 

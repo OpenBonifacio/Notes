@@ -3,7 +3,6 @@ package fr.openbonifacio.notes.notes.data.database
 import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import fr.openbonifacio.notes.notes.data.database.NotesDatabaseConstructor
 
 @Database(
     entities = [NoteEntity::class],
