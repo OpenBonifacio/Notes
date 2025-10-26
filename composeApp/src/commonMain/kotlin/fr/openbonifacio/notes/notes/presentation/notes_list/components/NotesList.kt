@@ -21,7 +21,9 @@ fun NotesList(
     modifier: Modifier = Modifier,
     scrollState: LazyListState = rememberLazyListState(),
     notes: List<Note>,
+    selectedIds: Set<Long> = emptySet(),
     onNoteClick: (Note) -> Unit,
+    onNoteLongClick: (Note) -> Unit,
 ){
     LazyColumn(
         state = scrollState,
@@ -40,7 +42,9 @@ fun NotesList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 18.dp),
+                isSelected = selectedIds.contains(note.id),
                 onNoteClick = { onNoteClick(note) },
+                onNoteLongClick = { onNoteLongClick(note) }
             )
         }
 
