@@ -54,6 +54,9 @@ class NoteDetailsViewModel(
             }
 
             is NoteDetailsAction.OnTextChange -> {
+                if (state.value.note?.title == action.title && state.value.note?.content == action.content)
+                    return
+
                 _state.update { current ->
                     current.copy(
                         note = current.note?.copy(
@@ -67,14 +70,6 @@ class NoteDetailsViewModel(
             }
         }
     }
-
-    /*private fun markAsFavorite(){
-        viewModelScope.launch {
-            state.value.note?.let {
-                //noteRepository.updateNote(it.copy(isFavorite = !it.isFavorite))
-            }
-        }
-    }*/
 
     @OptIn(FlowPreview::class)
     private fun observeEditState(){
