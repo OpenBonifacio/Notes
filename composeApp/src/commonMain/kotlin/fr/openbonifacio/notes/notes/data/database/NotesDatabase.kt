@@ -7,7 +7,7 @@ import fr.openbonifacio.notes.notes.data.database.NotesDatabaseConstructor
 
 @Database(
     entities = [NoteEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @ConstructedBy(NotesDatabaseConstructor::class)

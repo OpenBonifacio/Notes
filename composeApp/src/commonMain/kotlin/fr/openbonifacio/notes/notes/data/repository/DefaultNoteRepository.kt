@@ -2,7 +2,6 @@ package fr.openbonifacio.notes.notes.data.repository
 
 import androidx.sqlite.SQLiteException
 import fr.openbonifacio.notes.core.domain.EmptyResult
-import fr.openbonifacio.notes.core.domain.Error
 import fr.openbonifacio.notes.core.domain.Result
 import fr.openbonifacio.notes.core.presentation.DataError
 import fr.openbonifacio.notes.notes.data.database.NotesDao
@@ -10,6 +9,7 @@ import fr.openbonifacio.notes.notes.data.mappers.toNote
 import fr.openbonifacio.notes.notes.data.mappers.toNoteEntity
 import fr.openbonifacio.notes.notes.domain.Note
 import fr.openbonifacio.notes.notes.domain.NoteRepository
+import fr.openbonifacio.notes.core.util.TimeProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -32,9 +32,13 @@ class DefaultNoteRepository(
 
     override suspend fun upsertNote(note: Note): Result<Long, DataError.Local>{
         return try {
+            val now = TimeProvider.nowMillis()
+            if (note.createdAt == 0L) note.createdAt = now
+            note.updatedAt = now
+
             val id: Long = notesDao.upsert(note.toNoteEntity())
             Result.Success(id)
-        }catch (e: SQLiteException){
+        }catch (_: SQLiteException){
             Result.Error(DataError.Local.DISK_FULL)
         }
     }
@@ -43,16 +47,18 @@ class DefaultNoteRepository(
         return try {
             notesDao.deleteNote(note.id)
             Result.Success(Unit)
-        } catch (e: SQLiteException){
+        } catch (_: SQLiteException){
             Result.Error(DataError.Local.UNKNOWN)
         }
     }
 
     override suspend fun updateNote(note: Note): EmptyResult<DataError.Local> {
         return try {
-            notesDao.updateNote(note.id, note.title, note.content)
+            val now = TimeProvider.nowMillis()
+            note.updatedAt = now
+            notesDao.updateNote(note.id, note.title, note.content, note.updatedAt)
             Result.Success(Unit)
-        }catch (e: SQLiteException){
+        }catch (_: SQLiteException){
             Result.Error(DataError.Local.UNKNOWN)
         }
     }

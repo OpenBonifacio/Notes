@@ -4,5 +4,7 @@ data class Note(
     val id: Long,
     var title: String = "",
     var content: String = "",
-    var isFavorite: Boolean = false
+    var isFavorite: Boolean = false,
+    var createdAt: Long = 0L,
+    var updatedAt: Long = 0L
 )
