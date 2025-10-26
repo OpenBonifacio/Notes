@@ -1,7 +1,6 @@
 package fr.openbonifacio.notes.notes.presentation.notes_list.components
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,15 +21,9 @@ fun NotesListItem(
     onNoteClick: () -> Unit,
 ){
     Card(
-        modifier = modifier
-            /*.shadow(
-                elevation = 3.dp,
-                shape = RoundedCornerShape(20.dp),
-                spotColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-                ambientColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-            )*/
-            .clickable(onClick = onNoteClick),
         shape = RoundedCornerShape(20.dp),
+        modifier = modifier,
+        onClick = onNoteClick
     ) {
         Column(
             modifier = Modifier.padding(18.dp)
