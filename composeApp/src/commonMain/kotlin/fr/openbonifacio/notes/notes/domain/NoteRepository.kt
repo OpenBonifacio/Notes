@@ -2,7 +2,7 @@ package fr.openbonifacio.notes.notes.domain
 
 import fr.openbonifacio.notes.core.domain.EmptyResult
 import fr.openbonifacio.notes.core.domain.Result
-import fr.openbonifacio.notes.core.presentation.DataError
+import fr.openbonifacio.notes.core.domain.DataError
 import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {

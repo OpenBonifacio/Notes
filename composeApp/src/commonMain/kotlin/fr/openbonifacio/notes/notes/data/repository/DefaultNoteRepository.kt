@@ -3,7 +3,7 @@ package fr.openbonifacio.notes.notes.data.repository
 import androidx.sqlite.SQLiteException
 import fr.openbonifacio.notes.core.domain.EmptyResult
 import fr.openbonifacio.notes.core.domain.Result
-import fr.openbonifacio.notes.core.presentation.DataError
+import fr.openbonifacio.notes.core.domain.DataError
 import fr.openbonifacio.notes.notes.data.database.NotesDao
 import fr.openbonifacio.notes.notes.data.mappers.toNote
 import fr.openbonifacio.notes.notes.data.mappers.toNoteEntity
