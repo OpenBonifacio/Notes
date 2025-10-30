@@ -28,13 +28,25 @@ actual class DatabaseFactory(
                 db.execSQL("ALTER TABLE NoteEntity ADD COLUMN updatedAt INTEGER NOT NULL DEFAULT 0")
             }
 
-            // When Room is configured with a provided SQLiteDriver, Migration.migrate(SQLiteConnection) must be implemented.
-            override fun migrate(database: SQLiteConnection) {
-                database.execSQL("ALTER TABLE NoteEntity ADD COLUMN createdAt INTEGER NOT NULL DEFAULT 0")
-                database.execSQL("ALTER TABLE NoteEntity ADD COLUMN updatedAt INTEGER NOT NULL DEFAULT 0")
+            override fun migrate(connection: SQLiteConnection) {
+                connection.execSQL("ALTER TABLE NoteEntity ADD COLUMN createdAt INTEGER NOT NULL DEFAULT 0")
+                connection.execSQL("ALTER TABLE NoteEntity ADD COLUMN updatedAt INTEGER NOT NULL DEFAULT 0")
             }
         }
 
-        return builder.addMigrations(MIGRATION_1_2)
+        // Migration 2 -> 3: ajoute es colonnes deleted et status
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE NoteEntity ADD COLUMN deleted INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE NoteEntity ADD COLUMN status TEXT NOT NULL DEFAULT 'SYNCED'")
+            }
+
+            override fun migrate(connection: SQLiteConnection) {
+                connection.execSQL("ALTER TABLE NoteEntity ADD COLUMN deleted INTEGER NOT NULL DEFAULT 0")
+                connection.execSQL("ALTER TABLE NoteEntity ADD COLUMN status TEXT NOT NULL DEFAULT 'SYNCED'")
+            }
+        }
+
+        return builder.addMigrations(MIGRATION_1_2, MIGRATION_2_3)
     }
 }

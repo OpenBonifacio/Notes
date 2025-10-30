@@ -9,7 +9,9 @@ fun NoteEntity.toNote(): Note {
         title = title,
         content = content,
         createdAt = createdAt,
-        updatedAt = updatedAt
+        updatedAt = updatedAt,
+        deleted = deleted,
+        status = status
     )
 }
 
@@ -19,6 +21,8 @@ fun Note.toNoteEntity() : NoteEntity{
         title = title,
         content = content,
         createdAt = createdAt,
-        updatedAt = updatedAt
+        updatedAt = updatedAt,
+        deleted = deleted,
+        status = status
     )
 }
