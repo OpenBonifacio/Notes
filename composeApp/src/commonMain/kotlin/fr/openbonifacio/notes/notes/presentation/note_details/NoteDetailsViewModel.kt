@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class NoteDetailsViewModel(
-    private val noteId: Long = 0,
+    private val noteId: String = "0",
     private val noteRepository: NoteRepository
 ) : ViewModel() {
 
@@ -88,13 +88,13 @@ class NoteDetailsViewModel(
             state.value.note?.title?.isEmpty() == true &&
             state.value.note?.content?.isEmpty() == true
         ){
-            if (noteId == 0L) return
+            if (noteId == "0") return
             else onAction(NoteDetailsAction.OnDeleteClick)
         }
 
         viewModelScope.launch {
             state.value.note?.let { it ->
-                if (it.id == 0L){
+                if (it.id == "0"){
                         noteRepository.upsertNote(it).onSuccess { newId ->
                             _state.update { current ->
                                 current.copy(
@@ -113,7 +113,7 @@ class NoteDetailsViewModel(
 
     private fun fetchNoteDetails(){
         viewModelScope.launch {
-            if (noteId == 0L){
+            if (noteId == "0"){
                 _state.update {
                     it.copy(
                         note = Note(id = noteId),

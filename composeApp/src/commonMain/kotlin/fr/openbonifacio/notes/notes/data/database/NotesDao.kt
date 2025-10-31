@@ -4,6 +4,8 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 
 @Dao
@@ -13,14 +15,14 @@ interface NotesDao {
     fun getNotes() : Flow<List<NoteEntity>>
 
     @Query("SELECT * FROM NoteEntity WHERE id = :id")
-    suspend fun getNote(id: Long) : NoteEntity?
+    suspend fun getNote(id: String) : NoteEntity?
 
     @Query("DELETE FROM NoteEntity WHERE id = :id")
-    suspend fun deleteNote(id: Long)
+    suspend fun deleteNote(id: String)
 
     @Query("UPDATE NoteEntity SET title = :title, content = :content, updatedAt = :updatedAt WHERE id = :id")
-    suspend fun updateNote(id: Long, title: String, content: String, updatedAt: Long)
+    suspend fun updateNote(id: String, title: String, content: String, updatedAt: Long)
 
     @Upsert
-    suspend fun upsert(noteEntity: NoteEntity) : Long
+    suspend fun upsert(noteEntity: NoteEntity)
 }

@@ -7,5 +7,5 @@ data class NotesListState(
     val notes: List<Note> = emptyList(),
     val isLoading: Boolean = true,
     val errorMessage: UiText? = null,
-    val selectedIds: Set<Long> = emptySet()
+    val selectedIds: Set<String> = emptySet()
 )

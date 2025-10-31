@@ -37,7 +37,7 @@ val sharedModule = module {
     single { get<NotesDatabase>().notesDao }
 
     viewModelOf(::NotesListViewModel)
-    viewModel { (noteId: Long) ->
+    viewModel { (noteId: String) ->
         NoteDetailsViewModel(noteId = noteId, noteRepository = get())
     }
 }

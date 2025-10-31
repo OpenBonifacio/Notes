@@ -59,7 +59,7 @@ class NotesListViewModel(
         }
     }
 
-    private fun toggleSelection(noteId: Long) {
+    private fun toggleSelection(noteId: String) {
         _state.update { state ->
             val current = state.selectedIds
             if (current.contains(noteId)) {
@@ -70,7 +70,7 @@ class NotesListViewModel(
         }
     }
 
-    private fun deleteNotes(ids: Set<Long>){
+    private fun deleteNotes(ids: Set<String>){
         viewModelScope.launch {
             val notes = _state.value.notes.filter { it.id in ids }
             notes.forEach { note ->

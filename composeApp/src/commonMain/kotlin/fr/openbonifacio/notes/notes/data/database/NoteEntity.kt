@@ -2,6 +2,8 @@ package fr.openbonifacio.notes.notes.data.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 
 enum class SyncStatus {
@@ -13,7 +15,7 @@ enum class SyncStatus {
 
 @Entity
 data class NoteEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long,
+    @PrimaryKey() val id: String,
     val title: String,
     val content: String,
     val createdAt: Long = 0L,

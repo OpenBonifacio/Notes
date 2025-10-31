@@ -15,7 +15,7 @@ sealed interface Route {
     data object Profile: Route
 
     @Serializable
-    data class NoteDetails(val noteId: Long? = null): Route
+    data class NoteDetails(val noteId: String? = null): Route
 }
 
 data class BottomBarRoute<T: Route>(val label:String, val route:T, val icon: ImageVector)

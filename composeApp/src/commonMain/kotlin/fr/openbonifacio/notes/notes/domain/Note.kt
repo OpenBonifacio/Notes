@@ -3,7 +3,7 @@ package fr.openbonifacio.notes.notes.domain
 import fr.openbonifacio.notes.notes.data.database.SyncStatus
 
 data class Note(
-    val id: Long,
+    var id: String,
     var title: String = "",
     var content: String = "",
     var isFavorite: Boolean = false,

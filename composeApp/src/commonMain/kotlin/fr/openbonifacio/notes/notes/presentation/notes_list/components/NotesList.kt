@@ -21,7 +21,7 @@ fun NotesList(
     modifier: Modifier = Modifier,
     scrollState: LazyListState = rememberLazyListState(),
     notes: List<Note>,
-    selectedIds: Set<Long> = emptySet(),
+    selectedIds: Set<String> = emptySet(),
     onNoteClick: (Note) -> Unit,
     onNoteLongClick: (Note) -> Unit,
 ){

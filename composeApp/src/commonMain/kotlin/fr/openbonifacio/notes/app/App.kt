@@ -94,7 +94,7 @@ fun App() {
                                 navController.navigateSingleTopTo(Route.NoteDetails(noteId = note.id))
                             },
                             onFabClick = {
-                                navController.navigateSingleTopTo(Route.NoteDetails(0L))
+                                navController.navigateSingleTopTo(Route.NoteDetails("0"))
                             },
                             parrentPadding = innerPadding
                         )
