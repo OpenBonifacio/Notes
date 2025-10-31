@@ -41,7 +41,7 @@ object HttpClientFactory {
             defaultRequest {
                 contentType(ContentType.Application.Json)
                 headers {
-                    append(HttpHeaders.Authorization, "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNzVkYTIyNC05ZWYxLTRjY2EtOGQ0Ni1hNGY0ZWNlZDI2YTYiLCJpYXQiOjE3NjE4NTc4MzYsImV4cCI6MTc2MTg2MTQzNn0.G33LC4flPlw5tUMPcKzYF0BCSmP8Vq2zxb7afcOVV3I")
+                    append(HttpHeaders.Authorization, "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNzVkYTIyNC05ZWYxLTRjY2EtOGQ0Ni1hNGY0ZWNlZDI2YTYiLCJpYXQiOjE3NjE5MDMxMTcsImV4cCI6MTc2MTkwNjcxN30.e5j6oCvAfVhEgbLYcffMH3dDDByydSck51n2RFrOUT0")
                 }
             }
         }

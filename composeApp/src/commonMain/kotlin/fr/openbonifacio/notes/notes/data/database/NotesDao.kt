@@ -20,8 +20,8 @@ interface NotesDao {
     @Query("DELETE FROM NoteEntity WHERE id = :id")
     suspend fun deleteNote(id: String)
 
-    @Query("UPDATE NoteEntity SET title = :title, content = :content, updatedAt = :updatedAt WHERE id = :id")
-    suspend fun updateNote(id: String, title: String, content: String, updatedAt: Long)
+    @Query("UPDATE NoteEntity SET title = :title, content = :content, updatedAt = :updatedAt, status = :status WHERE id = :id")
+    suspend fun updateNote(id: String, title: String, content: String, updatedAt: Long, status: SyncStatus)
 
     @Upsert
     suspend fun upsert(noteEntity: NoteEntity)

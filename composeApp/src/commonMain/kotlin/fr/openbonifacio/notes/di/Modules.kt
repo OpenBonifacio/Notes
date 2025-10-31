@@ -2,8 +2,11 @@ package fr.openbonifacio.notes.di
 
 //import fr.openbonifacio.notes.notes.data.database.DatabaseFactory
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import fr.openbonifacio.notes.core.data.HttpClientFactory
 import fr.openbonifacio.notes.notes.data.database.DatabaseFactory
 import fr.openbonifacio.notes.notes.data.database.NotesDatabase
+import fr.openbonifacio.notes.notes.data.network.KtorRemoteDataSource
+import fr.openbonifacio.notes.notes.data.network.RemoteNotesSyncDataSource
 import fr.openbonifacio.notes.notes.data.repository.DefaultNoteRepository
 import fr.openbonifacio.notes.notes.domain.NoteRepository
 import fr.openbonifacio.notes.notes.presentation.note_details.NoteDetailsViewModel
@@ -22,6 +25,8 @@ koin permit to create a separate module for class that need a different implemen
 expect val platformModule : Module
 
 val sharedModule = module {
+    single { HttpClientFactory.create(get()) }
+    singleOf(::KtorRemoteDataSource).bind<RemoteNotesSyncDataSource>()
     /*single {
         MyRepositoryImpl(get())
     }.bind<MyRepository>()

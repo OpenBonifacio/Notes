@@ -5,7 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SyncNoteChangesDto(
-    @SerialName("id") val id: Long,
+    @SerialName("id") val id: String,
+    @SerialName("title") val title: String,
     @SerialName("content") val content: String,
     @SerialName("updatedAt") val upatedAt: Long,
     @SerialName("createdAt") val createdAt: Long,

@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SyncRequestDto(
-    @SerialName("user_id") val userId: Long,
+    @SerialName("user_id") val userId: String,
     @SerialName("notes") val notes: List<SyncNoteChangesDto>
 )

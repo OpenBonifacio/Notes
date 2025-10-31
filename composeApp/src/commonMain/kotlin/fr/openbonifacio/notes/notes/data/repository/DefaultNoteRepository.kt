@@ -1,23 +1,32 @@
 package fr.openbonifacio.notes.notes.data.repository
 
 import androidx.sqlite.SQLiteException
+import fr.openbonifacio.notes.core.domain.DataError
 import fr.openbonifacio.notes.core.domain.EmptyResult
 import fr.openbonifacio.notes.core.domain.Result
-import fr.openbonifacio.notes.core.domain.DataError
-import fr.openbonifacio.notes.notes.data.database.NotesDao
-import fr.openbonifacio.notes.notes.data.mappers.toNote
-import fr.openbonifacio.notes.notes.data.mappers.toNoteEntity
-import fr.openbonifacio.notes.notes.domain.Note
-import fr.openbonifacio.notes.notes.domain.NoteRepository
+import fr.openbonifacio.notes.core.domain.onError
+import fr.openbonifacio.notes.core.domain.onSuccess
 import fr.openbonifacio.notes.core.util.TimeProvider
 import fr.openbonifacio.notes.core.util.generatedUUID
+import fr.openbonifacio.notes.notes.data.database.NotesDao
+import fr.openbonifacio.notes.notes.data.database.SyncStatus
+import fr.openbonifacio.notes.notes.data.dto.SyncNoteChangesDto
+import fr.openbonifacio.notes.notes.data.dto.SyncRequestDto
+import fr.openbonifacio.notes.notes.data.dto.SyncResponseDto
+import fr.openbonifacio.notes.notes.data.mappers.toNote
+import fr.openbonifacio.notes.notes.data.mappers.toNoteEntity
+import fr.openbonifacio.notes.notes.data.network.RemoteNotesSyncDataSource
+import fr.openbonifacio.notes.notes.domain.Note
+import fr.openbonifacio.notes.notes.domain.NoteRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class DefaultNoteRepository(
+    private val remoteNotesSyncDataSource: RemoteNotesSyncDataSource,
     private val notesDao: NotesDao
 ): NoteRepository {
 
@@ -63,7 +72,8 @@ class DefaultNoteRepository(
         return try {
             val now = TimeProvider.nowMillis()
             note.updatedAt = now
-            notesDao.updateNote(note.id, note.title, note.content, note.updatedAt)
+            note.status = SyncStatus.PENDING_UPDATE
+            notesDao.updateNote(note.id, note.title, note.content, note.updatedAt, note.status)
             Result.Success(Unit)
         }catch (_: SQLiteException){
             Result.Error(DataError.Local.UNKNOWN)

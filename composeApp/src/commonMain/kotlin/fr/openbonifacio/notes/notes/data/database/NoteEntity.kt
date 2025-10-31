@@ -2,8 +2,6 @@ package fr.openbonifacio.notes.notes.data.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 
 enum class SyncStatus {
